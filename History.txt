@@ -1,0 +1,21 @@
+== 0.1
+
+- Birthday!
+
+== 0.2
+
+- Added new methods: adjust_brightness, negative
+- Fixed greyscale now honors alpha channel
+- Added from_url which allows loading images from url
+- Allow all methods to be callable without block
+
+== 0.3
+
+- Added new methods: flip_vertically, flip_horizontally, alpha, add_border
+- Add alias grayscale for greyscale
+- Add documentation to code by popular demand
+
+== 0.4
+
+- --border option missing a comma in code which broke recognizing that option
+- scale and thumbnail were broken.  Fixed

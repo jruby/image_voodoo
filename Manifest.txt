@@ -1,0 +1,17 @@
+bin/image_voodoo
+Manifest.txt
+Rakefile
+README.txt
+LICENSE.txt
+lib/image_science.rb
+lib/image_voodoo
+lib/image_voodoo.rb
+lib/image_voodoo/version.rb
+samples/bench.rb
+samples/checkerboard.jpg
+samples/file_greyscale.rb
+samples/file_thumbnail.rb
+samples/file_view.rb
+samples/in-memory.rb
+test/pix.png
+test/test_image_science.rb

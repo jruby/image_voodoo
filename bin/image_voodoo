@@ -1,0 +1,125 @@
+#!/usr/bin/env ruby
+
+require 'optparse'
+
+actions = []
+images = []
+original_image = nil
+
+opts = OptionParser.new do |opts|
+  opts.banner = "Usage: image_voodoo [actions] image_file"
+  opts.separator "Perform some actions on a source image."
+
+  opts.separator ""
+  opts.separator "Actions are meant to be chained. Examples:"
+  opts.separator "  # Print the dimensions"
+  opts.separator "  image_voodoo --dim small.jpg"
+  opts.separator ""
+  opts.separator "  # Convert to a thumbnail, preview, and then save the result"
+  opts.separator "  image_voodoo --thumb 50 --preview --save thumb.png large.jpg"
+  opts.separator ""
+  opts.separator "  # Convert source to 3 thumbnails, showing dimensions and"
+  opts.separator "  # previewing along the way"
+  opts.separator "  image_voodoo --dim --resize 50x50 --dim --preview --save t1.jpg"
+  opts.separator "    --pop --resize 40x40 --dim --preview --save t2.jpg"
+  opts.separator "    --pop --resize 30x30 --dim --preview --save t3.jpg image.jpg"
+
+  opts.separator ""
+  opts.separator "Actions:"
+
+  opts.on("-a", "--alpha color_value", "Make color transparent in image") do |c|
+    if c !~ /[[:xdigit:]]{6,6}/
+      opts.usage "color_value is rrggbb in hexidecimal format"
+    end
+    actions << lambda {|img| img.alpha(c) }
+  end
+
+  opts.on("-b", "--brightness SCALE,OFFSET", "Adjust brightness") do |args|
+    scale, offset = args.split(/\,/i).map {|v| v.to_f}
+    opts.usage "You need to specify proper scale and offset" unless scale && offset
+    actions << lambda {|img| img.adjust_brightness(scale, offset) }
+  end
+
+  opts.on("-B", "--border WIDTH,COLOR,STYLE", "Add a simple border") do |args|
+    width, color, style = args.split(/\,/i)
+    options = {:width => width, :color => color, :style => style }
+
+    actions << lambda {|img| img.add_border(options) }
+  end
+
+  opts.on("-d", "--dimensions", "Print the image dimensions") do
+    actions << lambda {|img| puts "#{img.width}x#{img.height}"; img }
+  end
+
+  opts.on("-g", "--greyscale", "Convert image to greyscale") do
+    actions << lambda {|img| img.greyscale }
+  end
+
+  opts.on("-h", "--flip_horizontally") do
+    actions << lambda {|img| img.flip_horizontally }
+  end
+
+  opts.on("-n", "--negative", "Make a negative out of the image") do
+    actions << lambda {|img| img.negative }
+  end
+
+  opts.on("-s", "--save FILENAME", "Save the results to a new file") do |f|
+    actions << lambda {|img| img.save(f); img }
+  end
+
+  opts.on("-t", "--thumbnail SIZE", Integer, "Create a thumbnail of the given size") do |size|
+    actions << lambda {|img| img.thumbnail(size) }
+  end
+
+  opts.on("-v", "--flip_vertically") do
+    actions << lambda {|img| img.flip_vertically }
+  end
+
+  opts.on("-p", "--preview", "Preview the image. Close the frame window",
+    "to continue, or quit the application to", "abort the action pipeline") do
+    actions << lambda do |img|
+      done = false
+      img.preview { done = true }
+      Thread.pass until done
+      img
+    end
+  end
+
+  opts.on("--push", "Save the current image to be popped later") do
+    actions << lambda {|img| images << img; img }
+  end
+
+  opts.on("--pop", "Revert back to the previous saved image", "or the original source image") do
+    actions << lambda {|img| images.pop || original_image }
+  end
+
+  opts.on("-r", "--resize WIDTHxHEIGHT", "Create a new image with the specified", "dimensions") do |dim|
+    width, height = dim.split(/x/i).map {|v| v.to_i}
+    opts.usage "You need to specify proper dimensions" unless width && width > 0 && height && height > 0
+    actions << lambda {|img| img.resize(width,height) }
+  end
+
+  opts.on_tail("-h", "--help", "Show this message") do
+    puts opts
+    exit 0
+  end
+
+  def opts.usage(msg)
+    puts msg
+    puts self
+    exit 1
+  end
+end
+opts.parse!(ARGV)
+opts.usage("You need to supply a source image filename.") unless ARGV.first
+opts.usage("You need to supply one or more actions.") unless actions.size > 0
+
+require 'image_voodoo'
+file_name = ARGV.first
+method = file_name =~ /^http:/ ? :from_url : :with_image
+ImageVoodoo.send(method, file_name) do |img|
+  original_image = img
+  actions.each { |act| img = act.call(img) }
+end
+# Be sure we exit out of swing
+java.lang.System.exit(0)
