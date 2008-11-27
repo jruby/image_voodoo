@@ -45,6 +45,7 @@ class ImageVoodoo
   GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
   ARGB = BufferedImage::TYPE_INT_ARGB
   RGB = BufferedImage::TYPE_INT_RGB
+  SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
 
   def initialize(src)
     @src = src
@@ -168,11 +169,8 @@ class ImageVoodoo
   #
   def resize(width, height)
     target = paint(BufferedImage.new(width, height, color_type)) do |g|
-      g.set_rendering_hint(RenderingHints::KEY_INTERPOLATION,
-                           RenderingHints::VALUE_INTERPOLATION_BICUBIC)
-      h_scale, w_scale = height.to_f / @src.height, width.to_f / @src.width
-      transform = AffineTransform.get_scale_instance w_scale, h_scale
-      g.draw_rendered_image @src, transform
+      scaled_image = @src.get_scaled_instance width, height, SCALE_SMOOTH
+      g.draw_image scaled_image, 0, 0, nil
     end
     block_given? ? yield(target) : target
   rescue NativeException => ne
