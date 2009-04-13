@@ -1,6 +1,12 @@
 syntax: glob
+nbproject/
 *~
 
 syntax: regexp
 ^pkg/
 
+\.orig\..*$
+\.orig$
+\.chg\..*$
+\.rej$
+\.conflict\~$
