@@ -27,19 +27,19 @@
 class ImageVoodoo
   include Java
 
-  import java.awt.RenderingHints
-  import java.awt.color.ColorSpace
-  import java.awt.geom.AffineTransform
-  import java.awt.image.BufferedImage
-  import java.awt.image.ByteLookupTable
-  import java.awt.image.ColorConvertOp
-  import java.awt.image.LookupOp
-  import java.awt.image.RescaleOp
+  java_import java.awt.RenderingHints
+  java_import java.awt.color.ColorSpace
+  java_import java.awt.geom.AffineTransform
+  java_import java.awt.image.BufferedImage
+  java_import java.awt.image.ByteLookupTable
+  java_import java.awt.image.ColorConvertOp
+  java_import java.awt.image.LookupOp
+  java_import java.awt.image.RescaleOp
   JFile = java.io.File
-  import java.io.ByteArrayInputStream
-  import java.io.ByteArrayOutputStream
-  import javax.imageio.ImageIO
-  import javax.swing.JFrame
+  java_import java.io.ByteArrayInputStream
+  java_import java.io.ByteArrayOutputStream
+  java_import javax.imageio.ImageIO
+  java_import javax.swing.JFrame
 
   NEGATIVE_OP = LookupOp.new(ByteLookupTable.new(0, (0...254).to_a.reverse.to_java(:byte)), nil)
   GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
