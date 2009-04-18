@@ -6,6 +6,8 @@ LICENSE.txt
 lib/image_science.rb
 lib/image_voodoo
 lib/image_voodoo.rb
+lib/image_voodoo/awt.rb
+lib/image_voodoo/gae.rb
 lib/image_voodoo/version.rb
 samples/bench.rb
 samples/checkerboard.jpg
