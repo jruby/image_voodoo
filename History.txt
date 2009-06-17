@@ -24,3 +24,8 @@
 
 - Better scaling implementation for thumbnails.
 - Some minor refactorings
+
+== 0.6
+
+- import statements changed to java_import to not interfere with rake
+- experimental Google App Engine backend (untested) to their image service
