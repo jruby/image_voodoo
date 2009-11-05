@@ -29,3 +29,8 @@
 
 - import statements changed to java_import to not interfere with rake
 - experimental Google App Engine backend (untested) to their image service
+
+== 0.7
+
+- add alias for image science method with_image_from_memory to our existing 
+  with_bytes

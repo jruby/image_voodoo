@@ -184,6 +184,10 @@ class ImageVoodoo
     block_given? ? yield(image) : image
   end
 
+  class << self
+    alias_method :with_image_from_memory, :with_bytes
+  end
+
   #
   # *_impl providers only need provide the implementation if it can
   # support it.  Otherwise, this method will detect that the method is 

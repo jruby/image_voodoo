@@ -5,10 +5,10 @@ README.txt
 LICENSE.txt
 lib/image_science.rb
 lib/image_voodoo
-lib/image_voodoo.rb
 lib/image_voodoo/awt.rb
 lib/image_voodoo/gae.rb
 lib/image_voodoo/version.rb
+lib/image_voodoo.rb
 samples/bench.rb
 samples/checkerboard.jpg
 samples/file_greyscale.rb
