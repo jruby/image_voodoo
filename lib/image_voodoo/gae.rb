@@ -6,14 +6,20 @@ class ImageVoodoo
 
   ImageService = ImagesServiceFactory.images_service
 
+  #--
   # Value Add methods for this backend
+  #++
 
+  #Automatically adjust contrast and color levels.
+  #GAE only.
   def i_am_feeling_lucky
     transform(ImagesServiceFactory.make_im_feeling_lucky)
   end
 
+  #--
   # Implementations of standard features
-
+  #++
+  
   def flip_horizontally_impl
     transform(ImagesServiceFactory.make_horizontal_flip)
   end

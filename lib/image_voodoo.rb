@@ -63,7 +63,10 @@ class ImageVoodoo
   end
 
   # 
-  # Write current image out as a stream of bytes using provided format.
+  # Get current image bytes as a String using provided format. Format parameter
+  # is the informal name of an image type - for instance,
+  # "bmp" or "jpg". If the backend is AWT the types available are listed in
+  # javax.imageio.ImageIO.getWriterFormatNames()
   # 
   def bytes(format)
     java_bytes = guard { bytes_impl(format) }
