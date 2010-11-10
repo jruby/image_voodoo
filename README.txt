@@ -6,6 +6,7 @@ ImageVoodoo is an Image manipulation library with a ImageScience-compatible API
 for JRuby.
 
 http://jruby-extras.rubyforge.org/image_voodoo/
+http://github.com/jruby/image_voodoo
 
 == FEATURES/PROBLEMS:
 

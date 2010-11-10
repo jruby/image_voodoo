@@ -1,6 +1,33 @@
-== 0.1
+== 0.8.0
 
-- Birthday!
+- Fix "too big for byte: 253" error
+- Add Github location
+
+== 0.7
+
+- add alias for image science method with_image_from_memory to our existing 
+  with_bytes
+
+== 0.6
+
+- import statements changed to java_import to not interfere with rake
+- experimental Google App Engine backend (untested) to their image service
+
+== 0.5
+
+- Better scaling implementation for thumbnails.
+- Some minor refactorings
+
+== 0.4
+
+- --border option missing a comma in code which broke recognizing that option
+- scale and thumbnail were broken.  Fixed
+
+== 0.3
+
+- Added new methods: flip_vertically, flip_horizontally, alpha, add_border
+- Add alias grayscale for greyscale
+- Add documentation to code by popular demand
 
 == 0.2
 
@@ -9,28 +36,6 @@
 - Added from_url which allows loading images from url
 - Allow all methods to be callable without block
 
-== 0.3
+== 0.1
 
-- Added new methods: flip_vertically, flip_horizontally, alpha, add_border
-- Add alias grayscale for greyscale
-- Add documentation to code by popular demand
-
-== 0.4
-
-- --border option missing a comma in code which broke recognizing that option
-- scale and thumbnail were broken.  Fixed
-
-== 0.5
-
-- Better scaling implementation for thumbnails.
-- Some minor refactorings
-
-== 0.6
-
-- import statements changed to java_import to not interfere with rake
-- experimental Google App Engine backend (untested) to their image service
-
-== 0.7
-
-- add alias for image science method with_image_from_memory to our existing 
-  with_bytes
+- Birthday!
