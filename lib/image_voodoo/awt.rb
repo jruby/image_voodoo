@@ -3,7 +3,7 @@ class ImageVoodoo
   java_import java.awt.color.ColorSpace
   java_import java.awt.geom.AffineTransform
   java_import java.awt.image.BufferedImage
-  java_import java.awt.image.ByteLookupTable
+  java_import java.awt.image.ShortLookupTable
   java_import java.awt.image.ColorConvertOp
   java_import java.awt.image.LookupOp
   java_import java.awt.image.RescaleOp
@@ -12,7 +12,7 @@ class ImageVoodoo
   java_import javax.imageio.ImageIO
   java_import javax.swing.JFrame
 
-  NEGATIVE_OP = LookupOp.new(ByteLookupTable.new(0, (0...254).to_a.reverse.to_java(:byte)), nil)
+  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...255).to_a.reverse.to_java(:short)), nil)
   GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
   ARGB = BufferedImage::TYPE_INT_ARGB
   RGB = BufferedImage::TYPE_INT_RGB
