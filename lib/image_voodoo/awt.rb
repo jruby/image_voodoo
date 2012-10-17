@@ -12,7 +12,7 @@ class ImageVoodoo
   java_import javax.imageio.ImageIO
   java_import javax.swing.JFrame
 
-  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...255).to_a.reverse.to_java(:short)), nil)
+  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
   GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
   ARGB = BufferedImage::TYPE_INT_ARGB
   RGB = BufferedImage::TYPE_INT_RGB
@@ -126,6 +126,8 @@ class ImageVoodoo
       graphics.draw_image(@image.to_java, @x, @y, nil)
     end
   end
+
+  ImageVoodoo::JImagePanel.__persistent__ = true 
 
   # Internal class for closing preview window
   class WindowClosed
