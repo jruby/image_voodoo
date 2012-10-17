@@ -35,13 +35,13 @@ opts = OptionParser.new do |opts|
   end
 
   opts.on("-b", "--brightness SCALE,OFFSET", "Adjust brightness") do |args|
-    scale, offset = args.split(/\,/i).map {|v| v.to_f}
+    scale, offset = args.split(/,/).map {|v| v.to_f}
     opts.usage "You need to specify proper scale and offset" unless scale && offset
     actions << lambda {|img| img.adjust_brightness(scale, offset) }
   end
 
   opts.on("-B", "--border WIDTH,COLOR,STYLE", "Add a simple border") do |args|
-    width, color, style = args.split(/\,/i)
+    width, color, style = args.split(/,/)
     options = {:width => width, :color => color, :style => style }
 
     actions << lambda {|img| img.add_border(options) }
