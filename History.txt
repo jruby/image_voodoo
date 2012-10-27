@@ -1,3 +1,15 @@
+== 0.8.3
+
+-
+
+== 0.8.2
+
+- My mind experiment to see how releases affect perception
+
+== 0.8.1
+
+- Convert from hoe to using bundler for gem releasing
+
 == 0.8.0
 
 - Fix "too big for byte: 253" error
