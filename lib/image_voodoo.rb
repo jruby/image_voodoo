@@ -1,3 +1,4 @@
+##
 #
 # = ImageVoodoo
 # == Description
@@ -29,6 +30,7 @@ class ImageVoodoo
 
   JFile = java.io.File
 
+  ##
   # FIXME: This has an issue when used in test/unit where the classcastexception
   #   is throwing the stack trace to output.  This does not happen when used
   #   directly.  Not sure....
@@ -44,6 +46,7 @@ class ImageVoodoo
     @src = src
   end
 
+  ##
   #
   # Adjusts the brightness of each pixel in image by the following formula:
   # new_pixel = pixel * scale + offset
@@ -52,7 +55,8 @@ class ImageVoodoo
     image = guard { adjust_brightness_impl(scale, offset) }
     block_given? ? yield(image) : image
   end
-
+  
+  ##
   #
   # Converts rgb hex color value to an alpha value an yields/returns the new 
   # image.
@@ -62,6 +66,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   # 
   # Get current image bytes as a String using provided format. Format parameter
   # is the informal name of an image type - for instance,
@@ -73,6 +78,7 @@ class ImageVoodoo
     String.from_java_bytes java_bytes
   end
 
+  ##
   #
   # Creates a square thumbnail of the image cropping the longest edge to 
   # match the shortest edge, resizes to size, and yields/returns the new image. 
@@ -86,6 +92,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   #
   # Flips the image horizontally and yields/returns the new image.
   #
@@ -94,6 +101,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   #
   # Flips the image vertically and yields/returns the new image.
   #
@@ -102,6 +110,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   # 
   # Creates a grayscale version of image and yields/returns the new image.
   #
@@ -111,6 +120,7 @@ class ImageVoodoo
   end
   alias_method :grayscale, :greyscale
 
+  ##
   # 
   # Creates a negative and yields/returns the new image.
   #
@@ -119,6 +129,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   #
   # Resizes the image to width and height and yields/returns the new image. 
   #
@@ -129,6 +140,7 @@ class ImageVoodoo
     raise ArgumentError, ne.message
   end
 
+  ##
   # 
   # Saves the image out to path. Changing the file extension will convert 
   # the file type to the appropriate format. 
@@ -141,6 +153,7 @@ class ImageVoodoo
     true
   end
 
+  ##
   #
   # Resize (scale) the current image by the provided ratio and yield/return
   # the new image.
@@ -151,6 +164,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   #
   # Creates a proportional thumbnail of the image scaled so its longest 
   # edge is resized to size and yields/returns the new image. 
@@ -160,6 +174,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  ##
   #
   # Crops an image to left, top, right, and bottom and then yields/returns the 
   # new image. 
@@ -169,6 +184,7 @@ class ImageVoodoo
     block_given? ? yield(image) : image
   end
 
+  ##
   # 
   # A top-level image loader opens path and then yields/returns the image.
   #
@@ -178,6 +194,7 @@ class ImageVoodoo
     image && block_given? ? yield(image) : image
   end
 
+  ##
   # 
   # A top-level image loader reads bytes and then yields/returns the image.
   #
@@ -191,6 +208,7 @@ class ImageVoodoo
     alias_method :with_image_from_memory, :with_bytes
   end
 
+  ##
   #
   # *_impl providers only need provide the implementation if it can
   # support it.  Otherwise, this method will detect that the method is 
@@ -207,6 +225,7 @@ class ImageVoodoo
     ImageVoodoo.guard(&block)
   end
 
+  ##
   #
   # Returns the height of the image, in pixels. 
   #
@@ -214,6 +233,7 @@ class ImageVoodoo
     @src.height
   end
 
+  ##
   #
   # Returns the width of the image, in pixels. 
   #
@@ -221,6 +241,7 @@ class ImageVoodoo
     @src.width
   end
 
+  ##
   #
   # Returns the underlying Java class associated with this object. Note:
   # Depending on whether you are using AWT or GAE/J you will get a totally
