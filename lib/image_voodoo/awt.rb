@@ -1,4 +1,8 @@
+require 'image_voodoo/awt/shapes'
+
 class ImageVoodoo
+  include ImageVoodoo::Shapes
+
   java_import java.awt.RenderingHints
   java_import java.awt.color.ColorSpace
   java_import java.awt.geom.AffineTransform
@@ -49,7 +53,6 @@ class ImageVoodoo
     transform(RescaleOp.new(scale, offset, nil))
   end
 
-  # AWT-only
   def alpha_impl(rgb)
     color = hex_to_color(rgb)
     target = paint(BufferedImage.new(width, height, ARGB)) do |g|
@@ -177,13 +180,18 @@ class ImageVoodoo
     ImageVoodoo.new ImageIO.read(ByteArrayInputStream.new(bytes))
   end
 
+  def self.canvas(width, height, rgb='000000')
+    image = ImageVoodoo.new(BufferedImage.new(width, height, ARGB))
+    image.rect(0, 0, width, height, rgb)
+  end
+
   private
 
   #
   # Converts a RGB hex value into a java.awt.Color object or dies trying
   # with an ArgumentError.
   #
-  def hex_to_color(rgb)
+  def self.hex_to_color(rgb)
     raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
 
     java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
@@ -201,7 +209,7 @@ class ImageVoodoo
   # Make a duplicate of the underlying Java src image
   #
   def dup_src
-    BufferedImage.new width, height, color_type
+    BufferedImage.new to_java.color_model, to_java.raster, true, nil
   end
 
   #
