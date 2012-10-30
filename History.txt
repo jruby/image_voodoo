@@ -1,6 +1,8 @@
 == 0.8.3
 
--
+- NEGATE_OP does not hit all valid values
+- src_dup was making new empty image instead of dup'ing image data
+- new shape support for writing shapes on images (see shapes.rb under awt)
 
 == 0.8.2
 
