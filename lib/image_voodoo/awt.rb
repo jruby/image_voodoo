@@ -16,16 +16,11 @@ class ImageVoodoo
   java_import javax.imageio.ImageIO
   java_import javax.swing.JFrame
 
-  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
-  GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
-  ARGB = BufferedImage::TYPE_INT_ARGB
-  RGB = BufferedImage::TYPE_INT_RGB
-  SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
-
+  # FIXME: Move and rewrite in terms of new shape
+  ##
   #
-  # AWT-only (experimental)
-  # Add a border to the image and yield/return a new image.  The following
-  # options are supported:
+  # *AWT* (experimental) Add a border to the image and yield/return a new 
+  # image.  The following options are supported:
   #   - width: How thick is the border (default: 3)
   #   - color: Which color is the border (in rrggbb hex value) 
   #   - style: etched, raised, plain (default: plain)
@@ -47,6 +42,142 @@ class ImageVoodoo
       g.draw_image(@src, nil, border_width, border_width)
     end
     block_given? ? yield(target) : target
+  end
+
+  ##
+  # 
+  # A simple swing wrapper around an image voodoo object.
+  #
+  class JImagePanel < javax.swing.JPanel
+    def initialize(image, x=0, y=0)
+      super()
+      @image, @x, @y = image, x, y
+    end
+
+    def image=(image)
+      @image = image
+      invalidate
+    end
+
+    def getPreferredSize
+      java.awt.Dimension.new(@image.width, @image.height)
+    end
+
+    def paintComponent(graphics)
+      graphics.draw_image(@image.to_java, @x, @y, nil)
+    end
+  end
+
+  ImageVoodoo::JImagePanel.__persistent__ = true 
+
+  # Internal class for closing preview window
+  class WindowClosed
+    def initialize(block = nil)
+      @block = block || proc { java.lang.System.exit(0) }
+    end
+    def method_missing(meth,*args); end
+    def windowClosing(event); @block.call; end
+  end
+
+  ##
+  #
+  # *AWT* Creates a viewable frame displaying current image within it.
+  #
+  def preview(&block)
+    frame = JFrame.new("Preview")
+    frame.add_window_listener WindowClosed.new(block)
+    frame.set_bounds 0, 0, width + 20, height + 40
+    frame.add JImagePanel.new(self, 10, 10)
+    frame.visible = true
+  end
+
+  ##
+  # *AWT* paint/render to the source
+  # 
+  def paint(src=dup_src)
+    yield src.graphics
+    src.graphics.dispose
+    ImageVoodoo.new src
+  end
+
+  ##
+  #
+  # TODO: Figure out how to determine whether source has alpha or not
+  # Experimental: Read an image from the url source and yield/return that
+  # image.
+  #
+  def self.from_url(source)
+    url = java.net.URL.new(source)
+    image = java.awt.Toolkit.default_toolkit.create_image(url)
+    tracker = java.awt.MediaTracker.new(java.awt.Label.new(""))
+    tracker.addImage(image, 0);
+    tracker.waitForID(0)
+    target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g| 
+      g.draw_image image, 0, 0, nil
+    end
+    block_given? ? yield(target) : target
+  rescue java.io.IOException, java.net.MalformedURLException
+    raise ArgumentError.new "Trouble retrieving image: #{$!.message}"
+  end
+
+  ##
+  # *AWT* Create an image of width x height filled with a single color.
+  #
+  def self.canvas(width, height, rgb='000000')
+    image = ImageVoodoo.new(BufferedImage.new(width, height, ARGB))
+    image.rect(0, 0, width, height, rgb)
+  end
+
+  private
+
+  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
+  GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
+  ARGB = BufferedImage::TYPE_INT_ARGB
+  RGB = BufferedImage::TYPE_INT_RGB
+  SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
+
+  def self.with_image_impl(file)
+    buffered_image = ImageIO.read(file)
+    buffered_image ? ImageVoodoo.new(buffered_image) : nil
+  end
+
+  def self.with_bytes_impl(bytes)
+    ImageVoodoo.new ImageIO.read(ByteArrayInputStream.new(bytes))
+  end
+
+  #
+  # Converts a RGB hex value into a java.awt.Color object or dies trying
+  # with an ArgumentError.
+  #
+  def self.hex_to_color(rgb)
+    raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
+
+    java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
+  end
+
+  # 
+  # Determines the best colorspace for a new image based on whether the
+  # existing image contains an alpha channel or not.
+  #
+  def color_type
+    @src.color_model.has_alpha ? ARGB : RGB
+  end
+
+  # 
+  # Make a duplicate of the underlying Java src image
+  #
+  def dup_src
+    BufferedImage.new to_java.color_model, to_java.raster, true, nil
+  end
+
+  #
+  # Do simple AWT operation transformation to target.
+  #
+  def transform(operation, target=dup_src)
+    paint(target) do |g|
+      g.draw_image(@src, 0, 0, nil)
+      g.draw_image(operation.filter(target, nil), 0, 0, nil)
+    end
   end
 
   def adjust_brightness_impl(scale, offset)
@@ -105,129 +236,5 @@ class ImageVoodoo
 
   def with_crop_impl(left, top, right, bottom)
     ImageVoodoo.new @src.get_subimage(left, top, right-left, bottom-top)
-  end
-
-  # 
-  # A simple swing wrapper around an image voodoo object.
-  #
-  class JImagePanel < javax.swing.JPanel
-    def initialize(image, x=0, y=0)
-      super()
-      @image, @x, @y = image, x, y
-    end
-
-    def image=(image)
-      @image = image
-      invalidate
-    end
-
-    def getPreferredSize
-      java.awt.Dimension.new(@image.width, @image.height)
-    end
-
-    def paintComponent(graphics)
-      graphics.draw_image(@image.to_java, @x, @y, nil)
-    end
-  end
-
-  ImageVoodoo::JImagePanel.__persistent__ = true 
-
-  # Internal class for closing preview window
-  class WindowClosed
-    def initialize(block = nil)
-      @block = block || proc { java.lang.System.exit(0) }
-    end
-    def method_missing(meth,*args); end
-    def windowClosing(event); @block.call; end
-  end
-
-  #
-  # Creates a viewable frame displaying current image within it.
-  #
-  def preview(&block)
-    frame = JFrame.new("Preview")
-    frame.add_window_listener WindowClosed.new(block)
-    frame.set_bounds 0, 0, width + 20, height + 40
-    frame.add JImagePanel.new(self, 10, 10)
-    frame.visible = true
-  end
-
-  #
-  # TODO: Figure out how to determine whether source has alpha or not
-  # Experimental: Read an image from the url source and yield/return that
-  # image.
-  #
-  def self.from_url(source)
-    url = java.net.URL.new(source)
-    image = java.awt.Toolkit.default_toolkit.create_image(url)
-    tracker = java.awt.MediaTracker.new(java.awt.Label.new(""))
-    tracker.addImage(image, 0);
-    tracker.waitForID(0)
-    target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g| 
-      g.draw_image image, 0, 0, nil
-    end
-    block_given? ? yield(target) : target
-  rescue java.io.IOException, java.net.MalformedURLException
-    raise ArgumentError.new "Trouble retrieving image: #{$!.message}"
-  end
-
-  def self.with_image_impl(file)
-    buffered_image = ImageIO.read(file)
-    buffered_image ? ImageVoodoo.new(buffered_image) : nil
-  end
-
-  def self.with_bytes_impl(bytes)
-    ImageVoodoo.new ImageIO.read(ByteArrayInputStream.new(bytes))
-  end
-
-  def self.canvas(width, height, rgb='000000')
-    image = ImageVoodoo.new(BufferedImage.new(width, height, ARGB))
-    image.rect(0, 0, width, height, rgb)
-  end
-
-  private
-
-  #
-  # Converts a RGB hex value into a java.awt.Color object or dies trying
-  # with an ArgumentError.
-  #
-  def self.hex_to_color(rgb)
-    raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
-
-    java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
-  end
-
-  # 
-  # Determines the best colorspace for a new image based on whether the
-  # existing image contains an alpha channel or not.
-  #
-  def color_type
-    @src.color_model.has_alpha ? ARGB : RGB
-  end
-
-  # 
-  # Make a duplicate of the underlying Java src image
-  #
-  def dup_src
-    BufferedImage.new to_java.color_model, to_java.raster, true, nil
-  end
-
-  #
-  # Do simple AWT operation transformation to target.
-  #
-  def transform(operation, target=dup_src)
-    paint(target) do |g|
-      g.draw_image(@src, 0, 0, nil)
-      g.draw_image(operation.filter(target, nil), 0, 0, nil)
-    end
-  end
-
-  #
-  # DRY up drawing setup+teardown
-  # 
-  def paint(src=dup_src)
-    yield src.graphics
-    src.graphics.dispose
-    ImageVoodoo.new src
   end
 end

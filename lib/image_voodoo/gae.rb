@@ -10,8 +10,8 @@ class ImageVoodoo
   # Value Add methods for this backend
   #++
 
-  #Automatically adjust contrast and color levels.
-  #GAE only.
+  ##
+  # *GAE* Automatically adjust contrast and color levels.
   def i_am_feeling_lucky
     transform(ImagesServiceFactory.make_im_feeling_lucky)
   end
@@ -19,10 +19,13 @@ class ImageVoodoo
   #--
   # Implementations of standard features
   #++
+
+  private
   
   def flip_horizontally_impl
     transform(ImagesServiceFactory.make_horizontal_flip)
   end
+  private :flip_horizontally_impl
 
   def flip_vertically_impl
     transform(ImagesServiceFactory.make_vertical_flip)
@@ -39,8 +42,6 @@ class ImageVoodoo
   def self.with_bytes_impl(bytes)
     ImageVoodoo.new ImageServicesFactory.make_image(bytes)
   end
-
-  private
 
   def from_java_bytes
     String.from_java_bytes @src.image_data
