@@ -16,7 +16,7 @@ opts = OptionParser.new do |opts|
   opts.separator "  image_voodoo --dim small.jpg"
   opts.separator ""
   opts.separator "  # Convert to a thumbnail, preview, and then save the result"
-  opts.separator "  image_voodoo --thumb 50 --preview --save thumb.png large.jpg"
+  opts.separator "  image_voodoo --thumbnail 50 --preview --save thumb.png large.jpg"
   opts.separator ""
   opts.separator "  # Convert source to 3 thumbnails, showing dimensions and"
   opts.separator "  # previewing along the way"
