@@ -14,6 +14,9 @@ class ImageVoodoo
   java_import java.io.ByteArrayInputStream
   java_import java.io.ByteArrayOutputStream
   java_import javax.imageio.ImageIO
+  java_import javax.imageio.IIOImage
+  java_import javax.imageio.ImageWriteParam
+  java_import javax.imageio.stream.FileImageOutputStream  
   java_import javax.swing.JFrame
 
   # FIXME: Move and rewrite in terms of new shape
@@ -199,7 +202,7 @@ class ImageVoodoo
 
   def bytes_impl(format)
     out = ByteArrayOutputStream.new
-    ImageIO.write(@src, format, out)
+    write_new_image format, out
     out.to_byte_array
   end
 
@@ -231,10 +234,23 @@ class ImageVoodoo
   # instance passed in.
   #
   def save_impl(format, file)
-    ImageIO.write(@src, format, file)
+    write_new_image format, FileImageOutputStream.new(file)
   end
 
   def with_crop_impl(left, top, right, bottom)
     ImageVoodoo.new @src.get_subimage(left, top, right-left, bottom-top)
+  end
+
+  def write_new_image(format, stream)
+    writer = ImageIO.getImageWritersByFormatName(format).next
+    writer.output = stream
+
+    param = writer.default_write_param
+    if param.can_write_compressed && @quality
+      param.compression_mode = ImageWriteParam::MODE_EXPLICIT
+      param.compression_quality = @quality
+    end
+
+    writer.write nil, IIOImage.new(@src, nil, nil), param
   end
 end

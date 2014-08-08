@@ -26,6 +26,8 @@
 # negative_img = img.negative
 #
 class ImageVoodoo
+  attr_accessor :quality
+  
   include Java
 
   JFile = java.io.File
@@ -44,6 +46,7 @@ class ImageVoodoo
 
   def initialize(src)
     @src = src
+    @quality = nil # nil means no specific quality ever specified
   end
 
   ##
@@ -126,6 +129,21 @@ class ImageVoodoo
   #
   def negative
     target = guard { negative_impl }
+    block_given? ? yield(target) : target
+  end
+
+  ##
+  #
+  # Set quality you want resulting image to be once you save or extract
+  # bytes for the image.  Note: This will only work for lossy image
+  # formats like PNG of JPEG.  For others it will be ignored.
+  def quality(amount)
+    if amount < 0.0 || amount > 1.0
+      raise ArgumentError.new "Quality must be between 0.0 and 1.0"
+    end
+
+    target = self.dup
+    target.quality = amount
     block_given? ? yield(target) : target
   end
 

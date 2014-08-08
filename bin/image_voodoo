@@ -63,6 +63,10 @@ opts = OptionParser.new do |opts|
     actions << lambda {|img| img.negative }
   end
 
+  opts.on("-q", "--quality 0..1", Float, "Set % of quality for lossy compression") do |quality|
+    actions << lambda {|img| img.quality(quality) }
+  end
+
   opts.on("-s", "--save FILENAME", "Save the results to a new file") do |f|
     actions << lambda {|img| img.save(f); img }
   end
