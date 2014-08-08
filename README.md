@@ -23,6 +23,7 @@ http://github.com/jruby/image_voodoo
       img2.save "HEH.jpg"
       img2.save "HEH.png"
     end
+    img.quality(0.75).save("reduced.jpg")
   end
 ```
 
