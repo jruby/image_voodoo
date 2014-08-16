@@ -202,7 +202,7 @@ class ImageVoodoo
 
   def bytes_impl(format)
     out = ByteArrayOutputStream.new
-    write_new_image format, out
+    write_new_image format, ImageIO.create_image_output_stream(out)
     out.to_byte_array
   end
 
