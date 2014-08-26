@@ -21,7 +21,7 @@ class ImageVoodoo
   #++
 
   private
-  
+
   def flip_horizontally_impl
     transform(ImagesServiceFactory.make_horizontal_flip)
   end
@@ -40,14 +40,15 @@ class ImageVoodoo
   end
 
   def self.with_bytes_impl(bytes)
-    ImageVoodoo.new ImageServicesFactory.make_image(bytes)
+    image = ImageServicesFactory.make_image(bytes)
+    ImageVoodoo.new image, image.format.to_s.upcase
   end
 
   def from_java_bytes
     String.from_java_bytes @src.image_data
   end
 
-  # 
+  #
   # Make a duplicate of the underlying src image
   #
   def dup_src

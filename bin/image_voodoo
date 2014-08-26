@@ -103,6 +103,10 @@ opts = OptionParser.new do |opts|
     actions << lambda {|img| img.resize(width,height) }
   end
 
+  opts.on("-f", "--format", "Print the image format") do
+    actions << lambda {|img| puts img.format; img }
+  end
+
   opts.on_tail("-h", "--help", "Show this message") do
     puts opts
     exit 0
