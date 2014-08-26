@@ -100,7 +100,7 @@ class ImageVoodoo
   def paint(src=dup_src)
     yield src.graphics
     src.graphics.dispose
-    ImageVoodoo.new src
+    ImageVoodoo.new(src, @format)
   end
 
   ##
@@ -140,12 +140,21 @@ class ImageVoodoo
   SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
 
   def self.with_image_impl(file)
+    format = detect_format_from_input(file)
     buffered_image = ImageIO.read(file)
-    buffered_image ? ImageVoodoo.new(buffered_image) : nil
+    buffered_image ? ImageVoodoo.new(buffered_image, format) : nil
+  end
+
+  def self.detect_format_from_input(input)
+    stream = ImageIO.createImageInputStream(input)
+    readers = ImageIO.getImageReaders(stream)
+    readers.has_next ? readers.next.format_name.upcase : nil
   end
 
   def self.with_bytes_impl(bytes)
-    ImageVoodoo.new ImageIO.read(ByteArrayInputStream.new(bytes))
+    input_stream = ByteArrayInputStream.new(bytes)
+    format = detect_format_from_input(input_stream)
+    ImageVoodoo.new(ImageIO.read(input_stream), format)
   end
 
   #
@@ -238,7 +247,7 @@ class ImageVoodoo
   end
 
   def with_crop_impl(left, top, right, bottom)
-    ImageVoodoo.new @src.get_subimage(left, top, right-left, bottom-top)
+    ImageVoodoo.new(@src.get_subimage(left, top, right-left, bottom-top), @format)
   end
 
   def write_new_image(format, stream)

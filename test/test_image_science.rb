@@ -130,4 +130,23 @@ class TestImageScience < Test::Unit::TestCase
 
     deny File.exists?(@tmppath)
   end
+
+  def test_image_format_retrieval
+    ImageScience.with_image @path do |img|
+      assert_equal 'PNG', img.format
+    end
+  end
+
+  def test_image_format_retrieval_from_bytes
+    ImageScience.with_image @path do |img|
+      bytes_string = img.bytes('JPEG')
+      image = ImageScience.with_bytes(bytes_string)
+      assert_equal 'JPEG', image.format
+    end
+  end
+
+  def test_image_format_retrieval_fail_when_invalid_bytes
+    image = ImageScience.with_bytes("some invalid image bytes")
+    assert_equal nil, image.format
+  end
 end

@@ -44,8 +44,9 @@ class ImageVoodoo
      require 'image_voodoo/awt'
   end
 
-  def initialize(src)
+  def initialize(src, format=nil)
     @src = src
+    @format = format
     @quality = nil # nil means no specific quality ever specified
   end
 
@@ -267,5 +268,17 @@ class ImageVoodoo
   #
   def to_java
     @src
+  end
+
+  ##
+  #
+  # Returns detected image format from binary representation of input data
+  # as upper case string. Eg. JPEG, BMP, PNG. For GWT image representation
+  # compatibility method name is :format. It also accepts block and returns
+  # format as first block argument. When format not detected or not set it
+  # returns nil
+  #
+  def format
+    @format && block_given? ? yield(@format) : @format
   end
 end
