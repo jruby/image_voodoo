@@ -6,7 +6,7 @@ class ImageVoodoo
     def square(x, y, dim, rgb, fill=true)
       square_rounded(x, y, dim, rgb, 0, fill)
     end
-    
+
     ##
     # *AWT* Draw a rectangle
     #
@@ -35,7 +35,7 @@ class ImageVoodoo
     end
 
     def as_color(color)
-      paint do |g| 
+      paint do |g|
         old_color = g.color
         g.color = color
         yield g

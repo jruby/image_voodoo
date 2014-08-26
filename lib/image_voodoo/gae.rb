@@ -21,7 +21,7 @@ class ImageVoodoo
   #++
 
   private
-  
+
   def flip_horizontally_impl
     transform(ImagesServiceFactory.make_horizontal_flip)
   end
@@ -47,7 +47,7 @@ class ImageVoodoo
     String.from_java_bytes @src.image_data
   end
 
-  # 
+  #
   # Make a duplicate of the underlying src image
   #
   def dup_src

@@ -16,16 +16,16 @@ class ImageVoodoo
   java_import javax.imageio.ImageIO
   java_import javax.imageio.IIOImage
   java_import javax.imageio.ImageWriteParam
-  java_import javax.imageio.stream.FileImageOutputStream  
+  java_import javax.imageio.stream.FileImageOutputStream
   java_import javax.swing.JFrame
 
   # FIXME: Move and rewrite in terms of new shape
   ##
   #
-  # *AWT* (experimental) Add a border to the image and yield/return a new 
+  # *AWT* (experimental) Add a border to the image and yield/return a new
   # image.  The following options are supported:
   #   - width: How thick is the border (default: 3)
-  #   - color: Which color is the border (in rrggbb hex value) 
+  #   - color: Which color is the border (in rrggbb hex value)
   #   - style: etched, raised, plain (default: plain)
   #
   def add_border(options = {})
@@ -48,7 +48,7 @@ class ImageVoodoo
   end
 
   ##
-  # 
+  #
   # A simple swing wrapper around an image voodoo object.
   #
   class JImagePanel < javax.swing.JPanel
@@ -71,7 +71,7 @@ class ImageVoodoo
     end
   end
 
-  ImageVoodoo::JImagePanel.__persistent__ = true 
+  ImageVoodoo::JImagePanel.__persistent__ = true
 
   # Internal class for closing preview window
   class WindowClosed
@@ -96,7 +96,7 @@ class ImageVoodoo
 
   ##
   # *AWT* paint/render to the source
-  # 
+  #
   def paint(src=dup_src)
     yield src.graphics
     src.graphics.dispose
@@ -115,7 +115,7 @@ class ImageVoodoo
     tracker = java.awt.MediaTracker.new(java.awt.Label.new(""))
     tracker.addImage(image, 0);
     tracker.waitForID(0)
-    target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g| 
+    target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g|
       g.draw_image image, 0, 0, nil
     end
     block_given? ? yield(target) : target
@@ -158,7 +158,7 @@ class ImageVoodoo
     java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
   end
 
-  # 
+  #
   # Determines the best colorspace for a new image based on whether the
   # existing image contains an alpha channel or not.
   #
@@ -166,7 +166,7 @@ class ImageVoodoo
     @src.color_model.has_alpha ? ARGB : RGB
   end
 
-  # 
+  #
   # Make a duplicate of the underlying Java src image
   #
   def dup_src

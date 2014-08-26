@@ -3,8 +3,8 @@
 # = ImageVoodoo
 # == Description
 #
-# ImageVoodoo is an ImageScience-API-compatible image manipulation library for 
-# JRuby.  
+# ImageVoodoo is an ImageScience-API-compatible image manipulation library for
+# JRuby.
 #
 # == Examples
 #
@@ -27,7 +27,7 @@
 #
 class ImageVoodoo
   attr_accessor :quality
-  
+
   include Java
 
   JFile = java.io.File
@@ -58,10 +58,10 @@ class ImageVoodoo
     image = guard { adjust_brightness_impl(scale, offset) }
     block_given? ? yield(image) : image
   end
-  
+
   ##
   #
-  # Converts rgb hex color value to an alpha value an yields/returns the new 
+  # Converts rgb hex color value to an alpha value an yields/returns the new
   # image.
   #
   def alpha(rgb)
@@ -70,12 +70,12 @@ class ImageVoodoo
   end
 
   ##
-  # 
+  #
   # Get current image bytes as a String using provided format. Format parameter
   # is the informal name of an image type - for instance,
   # "bmp" or "jpg". If the backend is AWT the types available are listed in
   # javax.imageio.ImageIO.getWriterFormatNames()
-  # 
+  #
   def bytes(format)
     java_bytes = guard { bytes_impl(format) }
     String.from_java_bytes java_bytes
@@ -83,8 +83,8 @@ class ImageVoodoo
 
   ##
   #
-  # Creates a square thumbnail of the image cropping the longest edge to 
-  # match the shortest edge, resizes to size, and yields/returns the new image. 
+  # Creates a square thumbnail of the image cropping the longest edge to
+  # match the shortest edge, resizes to size, and yields/returns the new image.
   #
   def cropped_thumbnail(size)
     l, t, r, b, half = 0, 0, width, height, (width - height).abs / 2
@@ -114,7 +114,7 @@ class ImageVoodoo
   end
 
   ##
-  # 
+  #
   # Creates a grayscale version of image and yields/returns the new image.
   #
   def greyscale
@@ -124,7 +124,7 @@ class ImageVoodoo
   alias_method :grayscale, :greyscale
 
   ##
-  # 
+  #
   # Creates a negative and yields/returns the new image.
   #
   def negative
@@ -149,7 +149,7 @@ class ImageVoodoo
 
   ##
   #
-  # Resizes the image to width and height and yields/returns the new image. 
+  # Resizes the image to width and height and yields/returns the new image.
   #
   def resize(width, height)
     target = guard { resize_impl(width, height) }
@@ -159,9 +159,9 @@ class ImageVoodoo
   end
 
   ##
-  # 
-  # Saves the image out to path. Changing the file extension will convert 
-  # the file type to the appropriate format. 
+  #
+  # Saves the image out to path. Changing the file extension will convert
+  # the file type to the appropriate format.
   #
   def save(file)
     format = File.extname(file)
@@ -184,8 +184,8 @@ class ImageVoodoo
 
   ##
   #
-  # Creates a proportional thumbnail of the image scaled so its longest 
-  # edge is resized to size and yields/returns the new image. 
+  # Creates a proportional thumbnail of the image scaled so its longest
+  # edge is resized to size and yields/returns the new image.
   #
   def thumbnail(size)
     target = scale(size.to_f / (width > height ? width : height))
@@ -194,8 +194,8 @@ class ImageVoodoo
 
   ##
   #
-  # Crops an image to left, top, right, and bottom and then yields/returns the 
-  # new image. 
+  # Crops an image to left, top, right, and bottom and then yields/returns the
+  # new image.
   #
   def with_crop(left, top, right, bottom)
     image = guard { with_crop_impl(left, top, right, bottom) }
@@ -203,7 +203,7 @@ class ImageVoodoo
   end
 
   ##
-  # 
+  #
   # A top-level image loader opens path and then yields/returns the image.
   #
   def self.with_image(path)
@@ -213,7 +213,7 @@ class ImageVoodoo
   end
 
   ##
-  # 
+  #
   # A top-level image loader reads bytes and then yields/returns the image.
   #
   def self.with_bytes(bytes)
@@ -229,7 +229,7 @@ class ImageVoodoo
   ##
   #
   # *_impl providers only need provide the implementation if it can
-  # support it.  Otherwise, this method will detect that the method is 
+  # support it.  Otherwise, this method will detect that the method is
   # missing.
   #
   def self.guard(&block)
@@ -245,7 +245,7 @@ class ImageVoodoo
 
   ##
   #
-  # Returns the height of the image, in pixels. 
+  # Returns the height of the image, in pixels.
   #
   def height
     @src.height
@@ -253,7 +253,7 @@ class ImageVoodoo
 
   ##
   #
-  # Returns the width of the image, in pixels. 
+  # Returns the width of the image, in pixels.
   #
   def width
     @src.width

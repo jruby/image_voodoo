@@ -19,7 +19,7 @@
 
 == 0.7
 
-- add alias for image science method with_image_from_memory to our existing 
+- add alias for image science method with_image_from_memory to our existing
   with_bytes
 
 == 0.6
