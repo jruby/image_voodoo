@@ -18,6 +18,11 @@ class ImageVoodoo
   java_import javax.imageio.ImageWriteParam
   java_import javax.imageio.stream.FileImageOutputStream
   java_import javax.swing.JFrame
+  java_import javax.imageio.IIOException
+
+  require 'CMYKDemo.jar'
+  java_import org.monte.media.jpeg.CMYKJPEGImageReader
+  java_import org.monte.media.jpeg.CMYKJPEGImageReaderSpi
 
   # FIXME: Move and rewrite in terms of new shape
   ##
@@ -141,8 +146,16 @@ class ImageVoodoo
 
   def self.with_image_impl(file)
     format = detect_format_from_input(file)
-    buffered_image = ImageIO.read(file)
+    buffered_image = read_image_from_input(file)
     buffered_image ? ImageVoodoo.new(buffered_image, format) : nil
+  end
+
+  def self.read_image_from_input(input)
+      ImageIO.read(input)
+    rescue IIOException
+      cmyk_reader = CMYKJPEGImageReader.new(CMYKJPEGImageReaderSpi.new)
+      cmyk_reader.setInput(ImageIO.createImageInputStream(input))
+      cmyk_reader.read(0)
   end
 
   def self.detect_format_from_input(input)
@@ -155,7 +168,7 @@ class ImageVoodoo
     input_stream = ByteArrayInputStream.new(bytes)
     format = detect_format_from_input(input_stream)
     input_stream.reset
-    ImageVoodoo.new(ImageIO.read(input_stream), format)
+    ImageVoodoo.new(read_image_from_input(input_stream), format)
   end
 
   #
