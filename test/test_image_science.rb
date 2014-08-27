@@ -142,6 +142,7 @@ class TestImageScience < Test::Unit::TestCase
       bytes_string = img.bytes('JPEG')
       image = ImageScience.with_bytes(bytes_string)
       assert_equal 'JPEG', image.format
+      assert image.to_java.is_a?(java.awt.image.BufferedImage), "JAVA representation of image should be a BufferedImage instance"
     end
   end
 

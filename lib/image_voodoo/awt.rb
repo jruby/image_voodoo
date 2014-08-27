@@ -154,6 +154,7 @@ class ImageVoodoo
   def self.with_bytes_impl(bytes)
     input_stream = ByteArrayInputStream.new(bytes)
     format = detect_format_from_input(input_stream)
+    input_stream.reset
     ImageVoodoo.new(ImageIO.read(input_stream), format)
   end
 
