@@ -142,12 +142,20 @@ class TestImageScience < Test::Unit::TestCase
       bytes_string = img.bytes('JPEG')
       image = ImageScience.with_bytes(bytes_string)
       assert_equal 'JPEG', image.format
-      assert image.to_java.is_a?(java.awt.image.BufferedImage), "JAVA representation of image should be a BufferedImage instance"
+      assert_kind_of java.awt.image.BufferedImage, image.to_java
     end
   end
 
   def test_image_format_retrieval_fail_when_invalid_bytes
     image = ImageScience.with_bytes("some invalid image bytes")
     assert_equal nil, image.format
+  end
+
+  def test_cmyk_jpeg_image_reading
+    assert_nothing_raised do
+      image = ImageScience.with_image('test/pix_cmyk.jpg')
+      assert_equal 'JPEG', image.format
+      assert_kind_of java.awt.image.BufferedImage, image.to_java
+    end
   end
 end
