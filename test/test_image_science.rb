@@ -158,4 +158,14 @@ class TestImageScience < Test::Unit::TestCase
       assert_kind_of java.awt.image.BufferedImage, image.to_java
     end
   end
+
+  def test_saving_gif_with_explicit_quality
+    @tmppath = 'test/pix-tmp.gif'
+    ImageScience.with_image @path do |img|
+      new_img = img.quality(0.8)
+      assert new_img.save(@tmppath)
+    end
+
+    assert File.exists?(@tmppath)
+  end
 end
