@@ -271,7 +271,7 @@ class ImageVoodoo
     param = writer.default_write_param
     if param.can_write_compressed && @quality
       param.compression_mode = ImageWriteParam::MODE_EXPLICIT
-      param.compression_type = param.compression_types.first if param.compression_type.nil?
+      param.compression_type ||= param.compression_types.first
       param.compression_quality = @quality
     end
 
