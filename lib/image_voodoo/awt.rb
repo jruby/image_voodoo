@@ -287,7 +287,9 @@ class ImageVoodoo
     new_height = (width * sin + height * cos).floor
 
     paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-      g.translate (new_width - width)/2, (new_height - height)/2
+      
+      g.java_send :translate, [::Java::int, ::Java::int],
+                  (new_width - width)/2, (new_height - height)/2
       g.rotate(radians, width / 2, height / 2);
       g.draw_image @src, 0, 0, nil
     end
