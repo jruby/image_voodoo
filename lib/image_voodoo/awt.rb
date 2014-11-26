@@ -20,10 +20,6 @@ class ImageVoodoo
   java_import javax.swing.JFrame
   java_import javax.imageio.IIOException
 
-  require 'CMYKDemo.jar'
-  java_import org.monte.media.jpeg.CMYKJPEGImageReader
-  java_import org.monte.media.jpeg.CMYKJPEGImageReaderSpi
-
   # FIXME: Move and rewrite in terms of new shape
   ##
   #
@@ -151,11 +147,14 @@ class ImageVoodoo
   end
 
   def self.read_image_from_input(input)
-      ImageIO.read(input)
-    rescue IIOException
-      cmyk_reader = CMYKJPEGImageReader.new(CMYKJPEGImageReaderSpi.new)
-      cmyk_reader.setInput(ImageIO.createImageInputStream(input))
-      cmyk_reader.read(0)
+    ImageIO.read(input)
+  rescue IIOException
+    require 'CMYKDemo.jar'
+
+    cmyk_spi = org.monte.media.jpeg.CMYKJPEGImageReaderSpi.new
+    cmyk_reader = org.monte.media.jpeg.CMYKJPEGImageReader.new cmyk_spi
+    cmyk_reader.input = ImageIO.createImageInputStream(input)
+    cmyk_reader.read 0
   end
 
   def self.detect_format_from_input(input)
@@ -239,6 +238,9 @@ class ImageVoodoo
 
   def greyscale_impl
     transform(GREY_OP)
+  end
+
+  def metadata_impl
   end
 
   def negative_impl
