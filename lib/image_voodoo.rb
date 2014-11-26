@@ -44,9 +44,8 @@ class ImageVoodoo
      require 'image_voodoo/awt'
   end
 
-  def initialize(src, format=nil)
-    @src = src
-    @format = format
+  def initialize(io, src, format=nil)
+    @io, @src, @format = io, src, format
     @quality = nil # nil means no specific quality ever specified
   end
 
@@ -80,6 +79,17 @@ class ImageVoodoo
   def bytes(format)
     java_bytes = guard { bytes_impl(format) }
     String.from_java_bytes java_bytes
+  end
+
+  ##
+  # If current image was taken by a phone it might save the orientation
+  # in format it was physically taken and added IFD0 Orientation information
+  # instead of rotating it.  This method will perform that rotation based
+  # on Orientation metadata.
+  #
+  def correct_orientation
+    target = guard { correct_orientation_impl }
+    block_given? ? yield(target) : target
   end
 
   ##
@@ -126,6 +136,14 @@ class ImageVoodoo
 
   ##
   #
+  # Extracts metadata from an image.
+  #
+  def metadata
+    guard { metadata_impl }
+  end
+
+  ##
+  #
   # Creates a negative and yields/returns the new image.
   #
   def negative
@@ -157,6 +175,15 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   rescue NativeException => ne
     raise ArgumentError, ne.message
+  end
+
+  ##
+  #
+  # Rotates the image by angle (specified in degrees).
+  #
+  def rotate(angle)
+    target = guard { rotate_impl(angle) }
+    block_given? ? yield(target) : target
   end
 
   ##

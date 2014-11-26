@@ -59,13 +59,32 @@ opts = OptionParser.new do |opts|
     actions << lambda {|img| img.flip_horizontally }
   end
 
+  opts.on("-m", "--metadata") do
+    actions << lambda {|img| puts img.metadata }
+  end
+
   opts.on("-n", "--negative", "Make a negative out of the image") do
     actions << lambda {|img| img.negative }
+  end
+
+  opts.on("-o", "--orient", "Rotate image to orient it based on metadata") do
+    actions << lambda {|img| img.correct_orientation }
   end
 
   opts.on("-q", "--quality 0..1", Float, "Set % of quality for lossy compression") do |quality|
     actions << lambda {|img| img.quality(quality) }
   end
+
+  opts.on("-R", "--rotate 0..360", Float, "Set angle to rotate image") do |angle|
+    actions << lambda {|img| img.rotate(angle.to_f) }
+  end
+
+  opts.on("-r", "--resize WIDTHxHEIGHT", "Create a new image with the specified", "dimensions") do |dim|
+    width, height = dim.split(/x/i).map {|v| v.to_i}
+    opts.usage "You need to specify proper dimensions" unless width && width > 0 && height && height > 0
+    actions << lambda {|img| img.resize(width,height) }
+  end
+
 
   opts.on("-s", "--save FILENAME", "Save the results to a new file") do |f|
     actions << lambda {|img| img.save(f); img }
@@ -95,12 +114,6 @@ opts = OptionParser.new do |opts|
 
   opts.on("--pop", "Revert back to the previous saved image", "or the original source image") do
     actions << lambda {|img| images.pop || original_image }
-  end
-
-  opts.on("-r", "--resize WIDTHxHEIGHT", "Create a new image with the specified", "dimensions") do |dim|
-    width, height = dim.split(/x/i).map {|v| v.to_i}
-    opts.usage "You need to specify proper dimensions" unless width && width > 0 && height && height > 0
-    actions << lambda {|img| img.resize(width,height) }
   end
 
   opts.on("-f", "--format", "Print the image format") do

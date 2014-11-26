@@ -101,7 +101,7 @@ class ImageVoodoo
   def paint(src=dup_src)
     yield src.graphics
     src.graphics.dispose
-    ImageVoodoo.new(src, @format)
+    ImageVoodoo.new(@io, src, @format)
   end
 
   ##
@@ -128,7 +128,7 @@ class ImageVoodoo
   # *AWT* Create an image of width x height filled with a single color.
   #
   def self.canvas(width, height, rgb='000000')
-    image = ImageVoodoo.new(BufferedImage.new(width, height, ARGB))
+    image = ImageVoodoo.new(@io, BufferedImage.new(width, height, ARGB))
     image.rect(0, 0, width, height, rgb)
   end
 
@@ -143,7 +143,7 @@ class ImageVoodoo
   def self.with_image_impl(file)
     format = detect_format_from_input(file)
     buffered_image = read_image_from_input(file)
-    buffered_image ? ImageVoodoo.new(buffered_image, format) : nil
+    buffered_image ? ImageVoodoo.new(file, buffered_image, format) : nil
   end
 
   def self.read_image_from_input(input)
@@ -167,7 +167,9 @@ class ImageVoodoo
     input_stream = ByteArrayInputStream.new(bytes)
     format = detect_format_from_input(input_stream)
     input_stream.reset
-    ImageVoodoo.new(read_image_from_input(input_stream), format)
+    buffered_image = read_image_from_input(input_stream)
+    input_stream.reset
+    ImageVoodoo.new(input_stream, buffered_image, format)
   end
 
   #
@@ -228,6 +230,27 @@ class ImageVoodoo
     out.to_byte_array
   end
 
+  def correct_orientation_impl
+    case metadata[:IFD0][:Orientation]
+    when 2 then
+      flip_horizontally
+    when 3 then
+      rotate 180
+    when 4 then
+      flip_vertically
+    when 5 then
+      flip_horizontally
+      rotate 270
+    when 6 then
+      rotate 90
+    when 7 then
+      flip_horizontally
+      rotate 270
+    else
+      self
+    end
+  end
+
   def flip_horizontally_impl
     paint {|g| g.draw_image @src, 0, 0, width, height, width, 0, 0, height, nil}
   end
@@ -241,6 +264,9 @@ class ImageVoodoo
   end
 
   def metadata_impl
+    require 'image_voodoo/metadata'
+    
+    ImageVoodoo::Metadata.new(@io)
   end
 
   def negative_impl
@@ -254,6 +280,19 @@ class ImageVoodoo
     end
   end
 
+  def rotate_impl(degrees)
+    radians = degrees * Math::PI / 180
+    sin, cos = Math.sin(radians).abs, Math.cos(radians).abs
+    new_width = (width * cos + height * sin).floor
+    new_height = (width * sin + height * cos).floor
+
+    paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
+      g.translate (new_width - width)/2, (new_height - height)/2
+      g.rotate(radians, width / 2, height / 2);
+      g.draw_image @src, 0, 0, nil
+    end
+  end
+
   #
   # Save using the format string (jpg, gif, etc..) to the open Java File
   # instance passed in.
@@ -263,7 +302,7 @@ class ImageVoodoo
   end
 
   def with_crop_impl(left, top, right, bottom)
-    ImageVoodoo.new(@src.get_subimage(left, top, right-left, bottom-top), @format)
+    ImageVoodoo.new(@io, @src.get_subimage(left, top, right-left, bottom-top), @format)
   end
 
   def write_new_image(format, stream)

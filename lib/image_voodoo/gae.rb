@@ -41,7 +41,7 @@ class ImageVoodoo
 
   def self.with_bytes_impl(bytes)
     image = ImageServicesFactory.make_image(bytes)
-    ImageVoodoo.new image, image.format.to_s.upcase
+    ImageVoodoo.new bytes, image, image.format.to_s.upcase
   end
 
   def from_java_bytes
