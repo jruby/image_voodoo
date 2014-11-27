@@ -20,6 +20,15 @@ class ImageVoodoo
       @metadata = com.drew.imaging.ImageMetadataReader.read_metadata io
     end
 
+    ##
+    # This will return a fairly useless Directory if you ask for one
+    # and there is no data in the image you are requesting.  The reason
+    # for doing this is so queries like 'md[:ISFD0][:Orientation]' can
+    # run and just return nil since I think this is the common case.
+    #
+    # See Directory#exists? if you want to make sure the group you are
+    # requesting actually exists or not.
+    # 
     def [](dirname)
       dirclass = DIRNAME_MAP[dirname.to_s] || dirname.to_s
       raise ArgumentError.new "Uknown metadata group: #{dirname}" unless dirclass
@@ -51,9 +60,16 @@ class ImageVoodoo
     end
 
     ##
+    # Does the directory you requested exist as metadata for this image.
+    def exists?
+      !!@directory
+    end
+
+    ##
     # Return tag value for the tag specified or nil if there is none
     # defined.
     def [](tag_name)
+      return nil unless @directory
       (tag_type, tag_method) = TAG_MAP[tag_name.to_s] || tag_name
       raise ArgumentError.new "Unkown tag_name: #{tag_name}" unless tag_type
       return nil unless @directory.contains_tag tag_type
