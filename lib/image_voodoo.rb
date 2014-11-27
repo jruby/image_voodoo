@@ -235,7 +235,7 @@ class ImageVoodoo
   # A top-level image loader opens path and then yields/returns the image.
   #
   def self.with_image(path)
-    raise ArgumentError, "file does not exist" unless File.file?(path)
+    raise ArgumentError, "file does not exist: #{path}" unless File.file?(path)
     image = guard { with_image_impl(JFile.new(path)) }
     image && block_given? ? yield(image) : image
   end

@@ -1,4 +1,5 @@
-require 'metadata-extractor-2.6.2.jar'
+require 'xmpcore-5.1.2.jar'
+require 'metadata-extractor-2.7.0.jar'
 
 class ImageVoodoo
   # FIXME: Add more image types and any other missing directory types.
@@ -34,7 +35,16 @@ class ImageVoodoo
     # groups.  If not then this will either need namespacing or one
     # map per group.
     TAG_MAP = {
+      'Artist' => [ExifIFD0Directory::TAG_ARTIST, :get_string],
+      'Copyright' => [ExifIFD0Directory::TAG_COPYRIGHT, :get_string],
+      'DateTime' => [ExifIFD0Directory::TAG_DATETIME, :get_date],
+      'Make' => [ExifIFD0Directory::TAG_MAKE, :get_string],
+      'Model' => [ExifIFD0Directory::TAG_MODEL, :get_string],
       'Orientation' => [ExifIFD0Directory::TAG_ORIENTATION, :get_int],
+      'Resolution' => [ExifIFD0Directory::TAG_RESOLUTION_UNIT, :get_string],
+      'Software' => [ExifIFD0Directory::TAG_SOFTWARE, :get_string],
+      'X Resolution' => [ExifIFD0Directory::TAG_X_RESOLUTION, :get_int],
+      'Y Resolution' => [ExifIFD0Directory::TAG_Y_RESOLUTION, :get_int],
     }
     def initialize(directory)
       @directory = directory
