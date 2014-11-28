@@ -231,7 +231,7 @@ class ImageVoodoo
   end
 
   def correct_orientation_impl
-    case metadata[:IFD0][:Orientation]
+    case metadata.orientation
     when 2 then
       flip_horizontally
     when 3 then
@@ -266,7 +266,7 @@ class ImageVoodoo
   def metadata_impl
     require 'image_voodoo/metadata'
     
-    ImageVoodoo::Metadata.new(@io)
+    @metadata ||= ImageVoodoo::Metadata.new(@io)
   end
 
   def negative_impl

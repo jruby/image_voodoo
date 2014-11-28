@@ -21,6 +21,30 @@ class ImageVoodoo
       raise ArgumentError.new "Uknown metadata group: #{dirname}" unless dirclass
       dirclass.new @metadata
     end
+
+    # Common metadata methods exposed as convenience functions so users
+    # do not need to dig around in the various directories
+    def make
+      self[:IFD0][:Make]
+    end
+
+    def model
+      self[:IFD0][:Model]
+    end
+
+    def orientation
+      self[:IFD0][:Orientation]
+    end
+
+    # FIXME: I wonder if this needs to fall back to try all other directories
+    # for Image Height
+    def height
+      self['Exif Sub IFD']['Exif Image Height']
+    end
+
+    def width
+      self['Exif Sub IFD']['Exif Image Width']
+    end
   end
 
   class Directory
@@ -129,8 +153,8 @@ class ImageVoodoo
       'Interop Index' => ['TAG_INTEROP_INDEX', :get_string],
       'Interop Version' => ['TAG_INTEROP_VERSION', :get_string],
       'Related Image File Format' => ['TAG_RELATED_IMAGE_FILE_FORMAT', :get_string],
-      'Related Image Width' => ['TAG_RELATED_IMAGE_WIDTH', :get_string],
-      'Related Image Length' => ['TAG_RELATED_IMAGE_LENGTH', :get_string],
+      'Related Image Width' => ['TAG_RELATED_IMAGE_WIDTH', :get_long],
+      'Related Image Length' => ['TAG_RELATED_IMAGE_LENGTH', :get_long],
     }
   end
 
@@ -214,8 +238,8 @@ class ImageVoodoo
       'Subsecond Time Digitized' => ['TAG_SUBSECOND_TIME_DIGITIZED', :get_string],
       'Flashpix Version' => ['TAG_FLASHPIX_VERSION', :get_string],
       'Color Space' => ['TAG_COLOR_SPACE', :get_string],
-      'Exif Image Width' => ['TAG_EXIF_IMAGE_WIDTH', :get_string],
-      'Exif Image Height' => ['TAG_EXIF_IMAGE_HEIGHT', :get_string],
+      'Exif Image Width' => ['TAG_EXIF_IMAGE_WIDTH', :get_long],
+      'Exif Image Height' => ['TAG_EXIF_IMAGE_HEIGHT', :get_long],
       'Related Sound File' => ['TAG_RELATED_SOUND_FILE', :get_string],
       'Interop Offset' => ['TAG_INTEROP_OFFSET', :get_string],
       'Focal Plane X Resolution' => ['TAG_FOCAL_PLANE_X_RESOLUTION', :get_string],
@@ -289,7 +313,7 @@ class ImageVoodoo
     end
 
     TAGS = {
-      'Version Id' => ['TAG_VERSION_ID', :get_string],
+      'Version Id' => ['TAG_VERSION_ID', :get_int_array],
       'Latitude Ref' => ['TAG_LATITUDE_REF', :get_string],
       'Latitude' => ['TAG_LATITUDE', :get_string],
       'Longitude Ref' => ['TAG_LONGITUDE_REF', :get_string],
@@ -464,10 +488,10 @@ class ImageVoodoo
       'Panorama Direction' => ['TAG_PANORAMA_DIRECTION', :get_string],
       'Num Af Points' => ['TAG_NUM_AF_POINTS', :get_string],
       'Valid Af Points' => ['TAG_VALID_AF_POINTS', :get_string],
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
-      'Af Image Width' => ['TAG_AF_IMAGE_WIDTH', :get_string],
-      'Af Image Height' => ['TAG_AF_IMAGE_HEIGHT', :get_string],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
+      'Af Image Width' => ['TAG_AF_IMAGE_WIDTH', :get_long],
+      'Af Image Height' => ['TAG_AF_IMAGE_HEIGHT', :get_long],
       'Af Area Width' => ['TAG_AF_AREA_WIDTH', :get_string],
       'Af Area Height' => ['TAG_AF_AREA_HEIGHT', :get_string],
       'Af Area X Positions' => ['TAG_AF_AREA_X_POSITIONS', :get_string],
@@ -836,8 +860,8 @@ class ImageVoodoo
       'Firmware Version' => ['TAG_FIRMWARE_VERSION', :get_string],
       'Pict Info' => ['TAG_PICT_INFO', :get_string],
       'Camera Id' => ['TAG_CAMERA_ID', :get_string],
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
       'Original Manufacturer Model' => ['TAG_ORIGINAL_MANUFACTURER_MODEL', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
       'Data Dump' => ['TAG_DATA_DUMP', :get_string],
@@ -1130,8 +1154,8 @@ class ImageVoodoo
       'Extra Info' => ['TAG_EXTRA_INFO', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
       'Multi Burst Mode' => ['TAG_MULTI_BURST_MODE', :get_string],
-      'Multi Burst Image Width' => ['TAG_MULTI_BURST_IMAGE_WIDTH', :get_string],
-      'Multi Burst Image Height' => ['TAG_MULTI_BURST_IMAGE_HEIGHT', :get_string],
+      'Multi Burst Image Width' => ['TAG_MULTI_BURST_IMAGE_WIDTH', :get_long],
+      'Multi Burst Image Height' => ['TAG_MULTI_BURST_IMAGE_HEIGHT', :get_long],
       'Panorama' => ['TAG_PANORAMA', :get_string],
       'Preview Image' => ['TAG_PREVIEW_IMAGE', :get_string],
       'Rating' => ['TAG_RATING', :get_string],
@@ -1211,8 +1235,8 @@ class ImageVoodoo
 
     TAGS = {
       'Gif Format Version' => ['TAG_GIF_FORMAT_VERSION', :get_string],
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
       'Color Table Size' => ['TAG_COLOR_TABLE_SIZE', :get_string],
       'Is Color Table Sorted' => ['TAG_IS_COLOR_TABLE_SORTED', :get_string],
       'Bits Per Pixel' => ['TAG_BITS_PER_PIXEL', :get_string],
@@ -1423,8 +1447,8 @@ class ImageVoodoo
     TAGS = {
       'Compression Type' => ['TAG_COMPRESSION_TYPE', :get_string],
       'Data Precision' => ['TAG_DATA_PRECISION', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
       'Number Of Components' => ['TAG_NUMBER_OF_COMPONENTS', :get_string],
       'Component Data 1' => ['TAG_COMPONENT_DATA_1', :get_string],
       'Component Data 2' => ['TAG_COMPONENT_DATA_2', :get_string],
@@ -1496,8 +1520,8 @@ class ImageVoodoo
 
     TAGS = {
       'Channel Count' => ['TAG_CHANNEL_COUNT', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
       'Bits Per Channel' => ['TAG_BITS_PER_CHANNEL', :get_string],
       'Color Mode' => ['TAG_COLOR_MODE', :get_string],
     }
@@ -1530,8 +1554,8 @@ class ImageVoodoo
     end
 
     TAGS = {
-      'Image Width' => ['TAG_IMAGE_WIDTH', :get_string],
-      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_string],
+      'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
+      'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
       'Bits Per Sample' => ['TAG_BITS_PER_SAMPLE', :get_string],
       'Color Type' => ['TAG_COLOR_TYPE', :get_string],
       'Compression Type' => ['TAG_COMPRESSION_TYPE', :get_string],
