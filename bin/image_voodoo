@@ -2,6 +2,7 @@
 
 require 'optparse'
 
+headless = true
 actions = []
 images = []
 original_image = nil
@@ -100,6 +101,8 @@ opts = OptionParser.new do |opts|
 
   opts.on("-p", "--preview", "Preview the image. Close the frame window",
     "to continue, or quit the application to", "abort the action pipeline") do
+
+    headless = false
     actions << lambda do |img|
       done = false
       img.preview { done = true }
@@ -134,6 +137,10 @@ end
 opts.parse!(ARGV)
 opts.usage("You need to supply a source image filename.") unless ARGV.first
 opts.usage("You need to supply one or more actions.") unless actions.size > 0
+
+# For this binstub we only want to load non-headless if we are using
+# the preview feature. top of See lib/image_voodoo.rb for more info...
+class ImageVoodoo; NEEDS_HEAD = true; end unless headless
 
 require 'image_voodoo'
 file_name = ARGV.first

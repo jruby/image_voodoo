@@ -13,6 +13,7 @@ http://github.com/jruby/image_voodoo
 * Includes image_voodoo command-line utility for quick resizing of images, "image_voodoo --help" for usage.
 * Due to lack of TIFF support in ImageIO it is also not supported yet by image_voodoo. If you need it, create an issue in GitHub.
 * **JPEG CMYK support** is thanks to work of Werner Randelshofer and [Monte Media Library](http://www.randelshofer.ch/monte/). Monte Media Library is provided under [CC BY 3.0](http://creativecommons.org/licenses/by/3.0/) license.
+* Now supports reading a variety of EXIF data.  This also supports new function --orient based on how phones typically save photo data.
 
 ## SYNOPSIS:
 

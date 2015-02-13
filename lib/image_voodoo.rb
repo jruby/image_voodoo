@@ -1,3 +1,12 @@
+# Before we load image_voodoo we can specify whether we want it to load full
+# AWT ala http://www.oracle.com/technetwork/articles/javase/headless-136834.html
+# Most users are using image_voodoo as a library for manipulation and do not
+# want a full peer window popping up.
+unless defined? ImageVoodoo::NEEDS_HEAD
+  java.lang.System.set_property 'java.awt.headless', 'true'
+end
+  
+
 ##
 #
 # = ImageVoodoo
