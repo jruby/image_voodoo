@@ -1,2 +1,9 @@
+language: ruby
+
+sudo: false
+
 rvm:
   - jruby-19mode
+
+before_script:
+  - git clone https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
