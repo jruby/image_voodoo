@@ -335,6 +335,6 @@ class ImageVoodoo
       @src
     end
 
-    writer.write nil, IIOImage.new(src_without_alpha, nil, nil), param
+    writer.write nil, IIOImage.new(src, nil, nil), param
   end
 end
