@@ -197,6 +197,17 @@ class ImageVoodoo
     BufferedImage.new to_java.color_model, to_java.raster, true, nil
   end
 
+  def src_without_alpha
+    if @src.color_model.has_alpha
+      img = BufferedImage.new(width, height, RGB)
+      img.graphics.draw_image(@src, 0, 0, nil)
+      img.graphics.dispose
+      img
+    else
+      @src
+    end
+  end
+
   #
   # Do simple AWT operation transformation to target.
   #
@@ -318,6 +329,12 @@ class ImageVoodoo
       param.compression_quality = @quality
     end
 
-    writer.write nil, IIOImage.new(@src, nil, nil), param
+    src = if format.downcase == "jpg"
+      src_without_alpha
+    else
+      @src
+    end
+
+    writer.write nil, IIOImage.new(src, nil, nil), param
   end
 end
