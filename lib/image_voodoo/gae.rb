@@ -20,12 +20,20 @@ class ImageVoodoo
   # Implementations of standard features
   #++
 
+  class << self
+    private
+    
+    def with_bytes_impl(bytes)
+      image = ImageServicesFactory.make_image(bytes)
+      ImageVoodoo.new bytes, image, image.format.to_s.upcase
+    end
+  end
+
   private
 
   def flip_horizontally_impl
     transform(ImagesServiceFactory.make_horizontal_flip)
   end
-  private :flip_horizontally_impl
 
   def flip_vertically_impl
     transform(ImagesServiceFactory.make_vertical_flip)
@@ -37,11 +45,6 @@ class ImageVoodoo
 
   def with_crop_impl(left, top, right, bottom)
     transform(ImagesServiceFactory.make_crop(left, top, right, bottom))
-  end
-
-  def self.with_bytes_impl(bytes)
-    image = ImageServicesFactory.make_image(bytes)
-    ImageVoodoo.new bytes, image, image.format.to_s.upcase
   end
 
   def from_java_bytes

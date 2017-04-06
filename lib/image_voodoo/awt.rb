@@ -132,44 +132,40 @@ class ImageVoodoo
     image.rect(0, 0, width, height, rgb)
   end
 
-  private
+  class << self
+    private
+    
+    def with_image_impl(file)
+      format = detect_format_from_input(file)
+      buffered_image = read_image_from_input(file)
+      buffered_image ? ImageVoodoo.new(file, buffered_image, format) : nil
+    end
 
-  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
-  GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
-  ARGB = BufferedImage::TYPE_INT_ARGB
-  RGB = BufferedImage::TYPE_INT_RGB
-  SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
+    def read_image_from_input(input)
+      ImageIO.read(input)
+    rescue IIOException
+      require 'CMYKDemo.jar'
 
-  def self.with_image_impl(file)
-    format = detect_format_from_input(file)
-    buffered_image = read_image_from_input(file)
-    buffered_image ? ImageVoodoo.new(file, buffered_image, format) : nil
-  end
+      cmyk_spi = org.monte.media.jpeg.CMYKJPEGImageReaderSpi.new
+      cmyk_reader = org.monte.media.jpeg.CMYKJPEGImageReader.new cmyk_spi
+      cmyk_reader.input = ImageIO.createImageInputStream(input)
+      cmyk_reader.read 0
+    end
 
-  def self.read_image_from_input(input)
-    ImageIO.read(input)
-  rescue IIOException
-    require 'CMYKDemo.jar'
+    def detect_format_from_input(input)
+      stream = ImageIO.createImageInputStream(input)
+      readers = ImageIO.getImageReaders(stream)
+      readers.has_next ? readers.next.format_name.upcase : nil
+    end
 
-    cmyk_spi = org.monte.media.jpeg.CMYKJPEGImageReaderSpi.new
-    cmyk_reader = org.monte.media.jpeg.CMYKJPEGImageReader.new cmyk_spi
-    cmyk_reader.input = ImageIO.createImageInputStream(input)
-    cmyk_reader.read 0
-  end
-
-  def self.detect_format_from_input(input)
-    stream = ImageIO.createImageInputStream(input)
-    readers = ImageIO.getImageReaders(stream)
-    readers.has_next ? readers.next.format_name.upcase : nil
-  end
-
-  def self.with_bytes_impl(bytes)
-    input_stream = ByteArrayInputStream.new(bytes)
-    format = detect_format_from_input(input_stream)
-    input_stream.reset
-    buffered_image = read_image_from_input(input_stream)
-    input_stream.reset
-    ImageVoodoo.new(input_stream, buffered_image, format)
+    def with_bytes_impl(bytes)
+      input_stream = ByteArrayInputStream.new(bytes)
+      format = detect_format_from_input(input_stream)
+      input_stream.reset
+      buffered_image = read_image_from_input(input_stream)
+      input_stream.reset
+      ImageVoodoo.new(input_stream, buffered_image, format)
+    end
   end
 
   #
@@ -181,6 +177,14 @@ class ImageVoodoo
 
     java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
   end
+  
+  private
+
+  NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
+  GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
+  ARGB = BufferedImage::TYPE_INT_ARGB
+  RGB = BufferedImage::TYPE_INT_RGB
+  SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
 
   #
   # Determines the best colorspace for a new image based on whether the
