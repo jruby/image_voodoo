@@ -79,7 +79,7 @@ class ImageVoodoo
       @block = block || proc { java.lang.System.exit(0) }
       super()
     end
-    
+
     def windowClosing(_)
       @block.call
     end
