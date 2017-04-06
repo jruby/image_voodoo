@@ -82,7 +82,7 @@ class ImageVoodoo
       'Dct Encode Version' => ['TAG_DCT_ENCODE_VERSION', :get_string],
       'App14 Flags0' => ['TAG_APP14_FLAGS0', :get_string],
       'App14 Flags1' => ['TAG_APP14_FLAGS1', :get_string],
-      'Color Transform' => ['TAG_COLOR_TRANSFORM', :get_string],
+      'Color Transform' => ['TAG_COLOR_TRANSFORM', :get_string]
     }
   end
 
@@ -103,7 +103,7 @@ class ImageVoodoo
       'X Pixels Per Meter' => ['TAG_X_PIXELS_PER_METER', :get_string],
       'Y Pixels Per Meter' => ['TAG_Y_PIXELS_PER_METER', :get_string],
       'Palette Colour Count' => ['TAG_PALETTE_COLOUR_COUNT', :get_string],
-      'Important Colour Count' => ['TAG_IMPORTANT_COLOUR_COUNT', :get_string],
+      'Important Colour Count' => ['TAG_IMPORTANT_COLOUR_COUNT', :get_string]
     }
   end
 
@@ -138,7 +138,7 @@ class ImageVoodoo
       'Win Comment' => ['TAG_WIN_COMMENT', :get_string],
       'Win Author' => ['TAG_WIN_AUTHOR', :get_string],
       'Win Keywords' => ['TAG_WIN_KEYWORDS', :get_string],
-      'Win Subject' => ['TAG_WIN_SUBJECT', :get_string],
+      'Win Subject' => ['TAG_WIN_SUBJECT', :get_string]
     }
   end
 
@@ -154,7 +154,7 @@ class ImageVoodoo
       'Interop Version' => ['TAG_INTEROP_VERSION', :get_string],
       'Related Image File Format' => ['TAG_RELATED_IMAGE_FILE_FORMAT', :get_string],
       'Related Image Width' => ['TAG_RELATED_IMAGE_WIDTH', :get_long],
-      'Related Image Length' => ['TAG_RELATED_IMAGE_LENGTH', :get_long],
+      'Related Image Length' => ['TAG_RELATED_IMAGE_LENGTH', :get_long]
     }
   end
 
@@ -270,7 +270,7 @@ class ImageVoodoo
       'Lens Model' => ['TAG_LENS_MODEL', :get_string],
       'Lens Serial Number' => ['TAG_LENS_SERIAL_NUMBER', :get_string],
       'Gamma' => ['TAG_GAMMA', :get_string],
-      'Lens' => ['TAG_LENS', :get_string],
+      'Lens' => ['TAG_LENS', :get_string]
     }
   end
 
@@ -301,7 +301,7 @@ class ImageVoodoo
       'Ycbcr Coefficients' => ['TAG_YCBCR_COEFFICIENTS', :get_rational_array],
       'Ycbcr Subsampling' => ['TAG_YCBCR_SUBSAMPLING', :get_int_array],
       'Ycbcr Positioning' => ['TAG_YCBCR_POSITIONING', :get_int],
-      'Reference Black White' => ['TAG_REFERENCE_BLACK_WHITE', :get_rational_array],
+      'Reference Black White' => ['TAG_REFERENCE_BLACK_WHITE', :get_rational_array]
     }
   end
 
@@ -343,7 +343,7 @@ class ImageVoodoo
       'Processing Method' => ['TAG_PROCESSING_METHOD', :get_string],
       'Area Information' => ['TAG_AREA_INFORMATION', :get_string],
       'Date Stamp' => ['TAG_DATE_STAMP', :get_string],
-      'Differential' => ['TAG_DIFFERENTIAL', :get_string],
+      'Differential' => ['TAG_DIFFERENTIAL', :get_string]
     }
   end
 
@@ -506,7 +506,7 @@ class ImageVoodoo
       'Canon Custom Function Fill Flash Reduction' => ['TAG_CANON_CUSTOM_FUNCTION_FILL_FLASH_REDUCTION', :get_string],
       'Canon Custom Function Menu Button Return' => ['TAG_CANON_CUSTOM_FUNCTION_MENU_BUTTON_RETURN', :get_string],
       'Canon Custom Function Set Button Function' => ['TAG_CANON_CUSTOM_FUNCTION_SET_BUTTON_FUNCTION', :get_string],
-      'Canon Custom Function Sensor Cleaning' => ['TAG_CANON_CUSTOM_FUNCTION_SENSOR_CLEANING', :get_string],
+      'Canon Custom Function Sensor Cleaning' => ['TAG_CANON_CUSTOM_FUNCTION_SENSOR_CLEANING', :get_string]
     }
   end
 
@@ -537,7 +537,7 @@ class ImageVoodoo
       'Unknown 6' => ['TAG_UNKNOWN_6', :get_string],
       'Unknown 7' => ['TAG_UNKNOWN_7', :get_string],
       'Unknown 8' => ['TAG_UNKNOWN_8', :get_string],
-      'Ccd Sensitivity' => ['TAG_CCD_SENSITIVITY', :get_string],
+      'Ccd Sensitivity' => ['TAG_CCD_SENSITIVITY', :get_string]
     }
   end
 
@@ -576,7 +576,7 @@ class ImageVoodoo
       'Ccd Iso Sensitivity' => ['TAG_CCD_ISO_SENSITIVITY', :get_int],
       'Colour Mode' => ['TAG_COLOUR_MODE', :get_string],
       'Enhancement' => ['TAG_ENHANCEMENT', :get_string],
-      'Filter' => ['TAG_FILTER', :get_string],
+      'Filter' => ['TAG_FILTER', :get_string]
     }
   end
 
@@ -631,7 +631,7 @@ class ImageVoodoo
       'File Source' => ['TAG_FILE_SOURCE', :get_string],
       'Order Number' => ['TAG_ORDER_NUMBER', :get_string],
       'Frame Number' => ['TAG_FRAME_NUMBER', :get_string],
-      'Parallax' => ['TAG_PARALLAX', :get_string],
+      'Parallax' => ['TAG_PARALLAX', :get_string]
     }
   end
 
@@ -644,7 +644,7 @@ class ImageVoodoo
 
     TAGS = {
       'Proprietary Thumbnail' => ['TAG_PROPRIETARY_THUMBNAIL', :get_string],
-      'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
+      'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string]
     }
   end
 
@@ -673,7 +673,7 @@ class ImageVoodoo
       'Ccd Board Version' => ['TAG_CCD_BOARD_VERSION', :get_string],
       'Controller Board Version' => ['TAG_CONTROLLER_BOARD_VERSION', :get_string],
       'M16 C Version' => ['TAG_M16_C_VERSION', :get_string],
-      'Image Id Number' => ['TAG_IMAGE_ID_NUMBER', :get_string],
+      'Image Id Number' => ['TAG_IMAGE_ID_NUMBER', :get_string]
     }
   end
 
@@ -695,7 +695,7 @@ class ImageVoodoo
       'Unknown 2' => ['TAG_UNKNOWN_2', :get_string],
       'Digital Zoom' => ['TAG_DIGITAL_ZOOM', :get_string],
       'Converter' => ['TAG_CONVERTER', :get_string],
-      'Unknown 3' => ['TAG_UNKNOWN_3', :get_string],
+      'Unknown 3' => ['TAG_UNKNOWN_3', :get_string]
     }
   end
 
@@ -823,7 +823,7 @@ class ImageVoodoo
       'Nikon Scan' => ['TAG_NIKON_SCAN', :get_string],
       'Unknown 54' => ['TAG_UNKNOWN_54', :get_string],
       'Nef Bit Depth' => ['TAG_NEF_BIT_DEPTH', :get_string],
-      'Unknown 55' => ['TAG_UNKNOWN_55', :get_string],
+      'Unknown 55' => ['TAG_UNKNOWN_55', :get_string]
     }
   end
 
@@ -926,7 +926,7 @@ class ImageVoodoo
       'Spot Focus Point Y Coordinate' => ['TAG_SPOT_FOCUS_POINT_Y_COORDINATE', :get_string],
       'Wide Focus Zone' => ['TAG_WIDE_FOCUS_ZONE', :get_string],
       'Focus Area' => ['TAG_FOCUS_AREA', :get_string],
-      'Dec Switch Position' => ['TAG_DEC_SWITCH_POSITION', :get_string],
+      'Dec Switch Position' => ['TAG_DEC_SWITCH_POSITION', :get_string]
     }
   end
 
@@ -1007,7 +1007,7 @@ class ImageVoodoo
       'Text Stamp 2' => ['TAG_TEXT_STAMP_2', :get_string],
       'Text Stamp 3' => ['TAG_TEXT_STAMP_3', :get_string],
       'Baby Age 1' => ['TAG_BABY_AGE_1', :get_string],
-      'Transform 1' => ['TAG_TRANSFORM_1', :get_string],
+      'Transform 1' => ['TAG_TRANSFORM_1', :get_string]
     }
   end
 
@@ -1032,7 +1032,7 @@ class ImageVoodoo
       'Colour' => ['TAG_COLOUR', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
       'Time Zone' => ['TAG_TIME_ZONE', :get_string],
-      'Daylight Savings' => ['TAG_DAYLIGHT_SAVINGS', :get_string],
+      'Daylight Savings' => ['TAG_DAYLIGHT_SAVINGS', :get_string]
     }
   end
 
@@ -1047,7 +1047,7 @@ class ImageVoodoo
       'Makernote Data Type' => ['TAG_MAKERNOTE_DATA_TYPE', :get_string],
       'Version' => ['TAG_VERSION', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
-      'Ricoh Camera Info Makernote Sub Ifd Pointer' => ['TAG_RICOH_CAMERA_INFO_MAKERNOTE_SUB_IFD_POINTER', :get_string],
+      'Ricoh Camera Info Makernote Sub Ifd Pointer' => ['TAG_RICOH_CAMERA_INFO_MAKERNOTE_SUB_IFD_POINTER', :get_string]
     }
   end
 
@@ -1085,7 +1085,7 @@ class ImageVoodoo
       'Sequence Shot Interval' => ['TAG_SEQUENCE_SHOT_INTERVAL', :get_string],
       'Flash Mode' => ['TAG_FLASH_MODE', :get_string],
       'Print Im' => ['TAG_PRINT_IM', :get_string],
-      'Data Dump' => ['TAG_DATA_DUMP', :get_string],
+      'Data Dump' => ['TAG_DATA_DUMP', :get_string]
     }
   end
 
@@ -1119,7 +1119,7 @@ class ImageVoodoo
       'Quality' => ['TAG_QUALITY', :get_string],
       'Firmware' => ['TAG_FIRMWARE', :get_string],
       'Software' => ['TAG_SOFTWARE', :get_string],
-      'Auto Bracket' => ['TAG_AUTO_BRACKET', :get_string],
+      'Auto Bracket' => ['TAG_AUTO_BRACKET', :get_string]
     }
   end
 
@@ -1195,7 +1195,7 @@ class ImageVoodoo
       'High Iso Noise Reduction 2' => ['TAG_HIGH_ISO_NOISE_REDUCTION_2', :get_string],
       'Intelligent Auto' => ['TAG_INTELLIGENT_AUTO', :get_string],
       'White Balance 2' => ['TAG_WHITE_BALANCE_2', :get_string],
-      'No Print' => ['TAG_NO_PRINT', :get_string],
+      'No Print' => ['TAG_NO_PRINT', :get_string]
     }
   end
 
@@ -1210,7 +1210,7 @@ class ImageVoodoo
       'Makernote Thumb Offset' => ['TAG_MAKERNOTE_THUMB_OFFSET', :get_string],
       'Makernote Thumb Length' => ['TAG_MAKERNOTE_THUMB_LENGTH', :get_string],
       'Unknown 1' => ['TAG_UNKNOWN_1', :get_string],
-      'Makernote Thumb Version' => ['TAG_MAKERNOTE_THUMB_VERSION', :get_string],
+      'Makernote Thumb Version' => ['TAG_MAKERNOTE_THUMB_VERSION', :get_string]
     }
   end
 
@@ -1230,7 +1230,7 @@ class ImageVoodoo
       'Bits Per Pixel' => ['TAG_BITS_PER_PIXEL', :get_string],
       'Has Global Color Table' => ['TAG_HAS_GLOBAL_COLOR_TABLE', :get_string],
       'Transparent Color Index' => ['TAG_TRANSPARENT_COLOR_INDEX', :get_string],
-      'Pixel Aspect Ratio' => ['TAG_PIXEL_ASPECT_RATIO', :get_string],
+      'Pixel Aspect Ratio' => ['TAG_PIXEL_ASPECT_RATIO', :get_string]
     }
   end
 
@@ -1306,7 +1306,7 @@ class ImageVoodoo
       'Bfd' => ['TAG_bfd', :get_string],
       'Vued' => ['TAG_vued', :get_string],
       'View' => ['TAG_view', :get_string],
-      'Apple Multi Language Profile Name' => ['TAG_APPLE_MULTI_LANGUAGE_PROFILE_NAME', :get_string],
+      'Apple Multi Language Profile Name' => ['TAG_APPLE_MULTI_LANGUAGE_PROFILE_NAME', :get_string]
     }
   end
 
@@ -1394,7 +1394,7 @@ class ImageVoodoo
       'Owner Id' => ['TAG_OWNER_ID', :get_string],
       'Object Preview File Format' => ['TAG_OBJECT_PREVIEW_FILE_FORMAT', :get_string],
       'Object Preview File Format Version' => ['TAG_OBJECT_PREVIEW_FILE_FORMAT_VERSION', :get_string],
-      'Object Preview Data' => ['TAG_OBJECT_PREVIEW_DATA', :get_string],
+      'Object Preview Data' => ['TAG_OBJECT_PREVIEW_DATA', :get_string]
     }
   end
 
@@ -1409,7 +1409,7 @@ class ImageVoodoo
       'Version' => ['TAG_VERSION', :get_string],
       'Units' => ['TAG_UNITS', :get_string],
       'Resx' => ['TAG_RESX', :get_string],
-      'Resy' => ['TAG_RESY', :get_string],
+      'Resy' => ['TAG_RESY', :get_string]
     }
   end
 
@@ -1421,7 +1421,7 @@ class ImageVoodoo
     end
 
     TAGS = {
-      'Comment' => ['TAG_COMMENT', :get_string],
+      'Comment' => ['TAG_COMMENT', :get_string]
     }
   end
 
@@ -1441,7 +1441,7 @@ class ImageVoodoo
       'Component Data 1' => ['TAG_COMPONENT_DATA_1', :get_string],
       'Component Data 2' => ['TAG_COMPONENT_DATA_2', :get_string],
       'Component Data 3' => ['TAG_COMPONENT_DATA_3', :get_string],
-      'Component Data 4' => ['TAG_COMPONENT_DATA_4', :get_string],
+      'Component Data 4' => ['TAG_COMPONENT_DATA_4', :get_string]
     }
   end
 
@@ -1495,7 +1495,7 @@ class ImageVoodoo
       'Print Scale' => ['TAG_PRINT_SCALE', :get_string],
       'Pixel Aspect Ratio' => ['TAG_PIXEL_ASPECT_RATIO', :get_string],
       'Print Info' => ['TAG_PRINT_INFO', :get_string],
-      'Print Flags Info' => ['TAG_PRINT_FLAGS_INFO', :get_string],
+      'Print Flags Info' => ['TAG_PRINT_FLAGS_INFO', :get_string]
     }
   end
 
@@ -1511,7 +1511,7 @@ class ImageVoodoo
       'Image Height' => ['TAG_IMAGE_HEIGHT', :get_long],
       'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
       'Bits Per Channel' => ['TAG_BITS_PER_CHANNEL', :get_string],
-      'Color Mode' => ['TAG_COLOR_MODE', :get_string],
+      'Color Mode' => ['TAG_COLOR_MODE', :get_string]
     }
   end
 
@@ -1530,7 +1530,7 @@ class ImageVoodoo
       'Green X' => ['TAG_GREEN_X', :get_string],
       'Green Y' => ['TAG_GREEN_Y', :get_string],
       'Blue X' => ['TAG_BLUE_X', :get_string],
-      'Blue Y' => ['TAG_BLUE_Y', :get_string],
+      'Blue Y' => ['TAG_BLUE_Y', :get_string]
     }
   end
 
@@ -1556,7 +1556,7 @@ class ImageVoodoo
       'Profile Name' => ['TAG_PROFILE_NAME', :get_string],
       'Textual Data' => ['TAG_TEXTUAL_DATA', :get_string],
       'Last Modification Time' => ['TAG_LAST_MODIFICATION_TIME', :get_string],
-      'Background Color' => ['TAG_BACKGROUND_COLOR', :get_string],
+      'Background Color' => ['TAG_BACKGROUND_COLOR', :get_string]
     }
   end
 
@@ -1582,7 +1582,7 @@ class ImageVoodoo
       'Exposure Program' => ['TAG_EXPOSURE_PROGRAM', :get_string],
       'Datetime Original' => ['TAG_DATETIME_ORIGINAL', :get_string],
       'Datetime Digitized' => ['TAG_DATETIME_DIGITIZED', :get_string],
-      'Rating' => ['TAG_RATING', :get_string],
+      'Rating' => ['TAG_RATING', :get_string]
     }
   end
 
@@ -1624,6 +1624,6 @@ class ImageVoodoo
     'Xmp' => XmpDirectory,
 
     # Aliases
-    'IFD0' => ExifIFD0Directory,
+    'IFD0' => ExifIFD0Directory
   }
 end

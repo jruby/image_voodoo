@@ -5,6 +5,10 @@
 #
 # % find ../metadata-extractor/Source/ -name '*Directory.java' | xargs grep TAG_ | grep 'public static final' | ruby tools/gen.rb
 
+# FIXME: I made style tweaks and removed redundant data manually in generated
+#   source.  I should update this tool to do all that.
+# FIXME: I should add a generated comment in metadata generated file.
+
 def normalize_directory_name(path)
   path.tr('/', '.')
 end
