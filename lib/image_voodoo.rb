@@ -254,7 +254,7 @@ class ImageVoodoo
   # A top-level image loader reads bytes and then yields/returns the image.
   #
   def self.with_bytes(bytes)
-    bytes = bytes.to_java_bytes if String === bytes
+    bytes = bytes.to_java_bytes if bytes.is_a? String
     image = guard { with_bytes_impl(bytes) }
     block_given? ? yield(image) : image
   end

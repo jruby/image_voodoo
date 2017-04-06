@@ -6,7 +6,7 @@
 # % find ../metadata-extractor/Source/ -name '*Directory.java' | xargs grep TAG_ | grep 'public static final' | ruby tools/gen.rb
 
 def normalize_directory_name(path)
-  path.gsub('/', '.')
+  path.tr('/', '.')
 end
 
 def normalize_tag_name(capname)
