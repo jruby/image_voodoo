@@ -1,7 +1,8 @@
-require 'xmpcore-5.1.2.jar'
-require 'metadata-extractor-2.7.0.jar'
+require_relative '../../vendor/xmpcore-5.1.2.jar'
+require_relative '../../vendor/metadata-extractor-2.7.0.jar'
 
 class ImageVoodoo
+  # Metadata contained within the image.
   class Metadata
     def initialize(io)
       @metadata = com.drew.imaging.ImageMetadataReader.read_metadata io
@@ -47,6 +48,10 @@ class ImageVoodoo
     end
   end
 
+  # All metadata are contained within Directories.  An image may have n
+  # directories.  You have to know a bit about the image to khow what to
+  # look at (e.g. a image from a Pentax camera may have a PentaxMakerNote
+  # directory.
   class Directory
     def initialize(metadata)
       @directory = metadata.get_directory self.class.directory_class.java_class
@@ -71,6 +76,7 @@ class ImageVoodoo
     end
   end
 
+  # GENERATED
   class AdobeJpegDirectory < Directory
     java_import com.drew.metadata.adobe.AdobeJpegDirectory
 
@@ -83,9 +89,10 @@ class ImageVoodoo
       'App14 Flags0' => ['TAG_APP14_FLAGS0', :get_string],
       'App14 Flags1' => ['TAG_APP14_FLAGS1', :get_string],
       'Color Transform' => ['TAG_COLOR_TRANSFORM', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class BmpHeaderDirectory < Directory
     java_import com.drew.metadata.bmp.BmpHeaderDirectory
 
@@ -104,9 +111,10 @@ class ImageVoodoo
       'Y Pixels Per Meter' => ['TAG_Y_PIXELS_PER_METER', :get_string],
       'Palette Colour Count' => ['TAG_PALETTE_COLOUR_COUNT', :get_string],
       'Important Colour Count' => ['TAG_IMPORTANT_COLOUR_COUNT', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class ExifIFD0Directory < Directory
     java_import com.drew.metadata.exif.ExifIFD0Directory
 
@@ -139,9 +147,10 @@ class ImageVoodoo
       'Win Author' => ['TAG_WIN_AUTHOR', :get_string],
       'Win Keywords' => ['TAG_WIN_KEYWORDS', :get_string],
       'Win Subject' => ['TAG_WIN_SUBJECT', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class ExifInteropDirectory < Directory
     java_import com.drew.metadata.exif.ExifInteropDirectory
 
@@ -155,9 +164,10 @@ class ImageVoodoo
       'Related Image File Format' => ['TAG_RELATED_IMAGE_FILE_FORMAT', :get_string],
       'Related Image Width' => ['TAG_RELATED_IMAGE_WIDTH', :get_long],
       'Related Image Length' => ['TAG_RELATED_IMAGE_LENGTH', :get_long]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class ExifSubIFDDirectory < Directory
     java_import com.drew.metadata.exif.ExifSubIFDDirectory
 
@@ -271,9 +281,10 @@ class ImageVoodoo
       'Lens Serial Number' => ['TAG_LENS_SERIAL_NUMBER', :get_string],
       'Gamma' => ['TAG_GAMMA', :get_string],
       'Lens' => ['TAG_LENS', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class ExifThumbnailDirectory < Directory
     java_import com.drew.metadata.exif.ExifThumbnailDirectory
 
@@ -302,9 +313,10 @@ class ImageVoodoo
       'Ycbcr Subsampling' => ['TAG_YCBCR_SUBSAMPLING', :get_int_array],
       'Ycbcr Positioning' => ['TAG_YCBCR_POSITIONING', :get_int],
       'Reference Black White' => ['TAG_REFERENCE_BLACK_WHITE', :get_rational_array]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class GpsDirectory < Directory
     java_import com.drew.metadata.exif.GpsDirectory
 
@@ -344,9 +356,10 @@ class ImageVoodoo
       'Area Information' => ['TAG_AREA_INFORMATION', :get_string],
       'Date Stamp' => ['TAG_DATE_STAMP', :get_string],
       'Differential' => ['TAG_DIFFERENTIAL', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class CanonMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.CanonMakernoteDirectory
 
@@ -507,9 +520,10 @@ class ImageVoodoo
       'Canon Custom Function Menu Button Return' => ['TAG_CANON_CUSTOM_FUNCTION_MENU_BUTTON_RETURN', :get_string],
       'Canon Custom Function Set Button Function' => ['TAG_CANON_CUSTOM_FUNCTION_SET_BUTTON_FUNCTION', :get_string],
       'Canon Custom Function Sensor Cleaning' => ['TAG_CANON_CUSTOM_FUNCTION_SENSOR_CLEANING', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class CasioType1MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.CasioType1MakernoteDirectory
 
@@ -538,9 +552,10 @@ class ImageVoodoo
       'Unknown 7' => ['TAG_UNKNOWN_7', :get_string],
       'Unknown 8' => ['TAG_UNKNOWN_8', :get_string],
       'Ccd Sensitivity' => ['TAG_CCD_SENSITIVITY', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class CasioType2MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.CasioType2MakernoteDirectory
 
@@ -577,9 +592,10 @@ class ImageVoodoo
       'Colour Mode' => ['TAG_COLOUR_MODE', :get_string],
       'Enhancement' => ['TAG_ENHANCEMENT', :get_string],
       'Filter' => ['TAG_FILTER', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class FujifilmMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.FujifilmMakernoteDirectory
 
@@ -632,9 +648,10 @@ class ImageVoodoo
       'Order Number' => ['TAG_ORDER_NUMBER', :get_string],
       'Frame Number' => ['TAG_FRAME_NUMBER', :get_string],
       'Parallax' => ['TAG_PARALLAX', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class KyoceraMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.KyoceraMakernoteDirectory
 
@@ -645,9 +662,10 @@ class ImageVoodoo
     TAGS = {
       'Proprietary Thumbnail' => ['TAG_PROPRIETARY_THUMBNAIL', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class LeicaMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.LeicaMakernoteDirectory
 
@@ -674,9 +692,10 @@ class ImageVoodoo
       'Controller Board Version' => ['TAG_CONTROLLER_BOARD_VERSION', :get_string],
       'M16 C Version' => ['TAG_M16_C_VERSION', :get_string],
       'Image Id Number' => ['TAG_IMAGE_ID_NUMBER', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class NikonType1MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.NikonType1MakernoteDirectory
 
@@ -696,9 +715,10 @@ class ImageVoodoo
       'Digital Zoom' => ['TAG_DIGITAL_ZOOM', :get_string],
       'Converter' => ['TAG_CONVERTER', :get_string],
       'Unknown 3' => ['TAG_UNKNOWN_3', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class NikonType2MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.NikonType2MakernoteDirectory
 
@@ -824,9 +844,10 @@ class ImageVoodoo
       'Unknown 54' => ['TAG_UNKNOWN_54', :get_string],
       'Nef Bit Depth' => ['TAG_NEF_BIT_DEPTH', :get_string],
       'Unknown 55' => ['TAG_UNKNOWN_55', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class OlympusMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.OlympusMakernoteDirectory
 
@@ -927,9 +948,10 @@ class ImageVoodoo
       'Wide Focus Zone' => ['TAG_WIDE_FOCUS_ZONE', :get_string],
       'Focus Area' => ['TAG_FOCUS_AREA', :get_string],
       'Dec Switch Position' => ['TAG_DEC_SWITCH_POSITION', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PanasonicMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.PanasonicMakernoteDirectory
 
@@ -1008,9 +1030,10 @@ class ImageVoodoo
       'Text Stamp 3' => ['TAG_TEXT_STAMP_3', :get_string],
       'Baby Age 1' => ['TAG_BABY_AGE_1', :get_string],
       'Transform 1' => ['TAG_TRANSFORM_1', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PentaxMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.PentaxMakernoteDirectory
 
@@ -1033,9 +1056,10 @@ class ImageVoodoo
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
       'Time Zone' => ['TAG_TIME_ZONE', :get_string],
       'Daylight Savings' => ['TAG_DAYLIGHT_SAVINGS', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class RicohMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.RicohMakernoteDirectory
 
@@ -1048,9 +1072,10 @@ class ImageVoodoo
       'Version' => ['TAG_VERSION', :get_string],
       'Print Image Matching Info' => ['TAG_PRINT_IMAGE_MATCHING_INFO', :get_string],
       'Ricoh Camera Info Makernote Sub Ifd Pointer' => ['TAG_RICOH_CAMERA_INFO_MAKERNOTE_SUB_IFD_POINTER', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class SanyoMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.SanyoMakernoteDirectory
 
@@ -1086,9 +1111,10 @@ class ImageVoodoo
       'Flash Mode' => ['TAG_FLASH_MODE', :get_string],
       'Print Im' => ['TAG_PRINT_IM', :get_string],
       'Data Dump' => ['TAG_DATA_DUMP', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class SigmaMakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.SigmaMakernoteDirectory
 
@@ -1120,9 +1146,10 @@ class ImageVoodoo
       'Firmware' => ['TAG_FIRMWARE', :get_string],
       'Software' => ['TAG_SOFTWARE', :get_string],
       'Auto Bracket' => ['TAG_AUTO_BRACKET', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class SonyType1MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.SonyType1MakernoteDirectory
 
@@ -1196,9 +1223,10 @@ class ImageVoodoo
       'Intelligent Auto' => ['TAG_INTELLIGENT_AUTO', :get_string],
       'White Balance 2' => ['TAG_WHITE_BALANCE_2', :get_string],
       'No Print' => ['TAG_NO_PRINT', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class SonyType6MakernoteDirectory < Directory
     java_import com.drew.metadata.exif.makernotes.SonyType6MakernoteDirectory
 
@@ -1211,9 +1239,10 @@ class ImageVoodoo
       'Makernote Thumb Length' => ['TAG_MAKERNOTE_THUMB_LENGTH', :get_string],
       'Unknown 1' => ['TAG_UNKNOWN_1', :get_string],
       'Makernote Thumb Version' => ['TAG_MAKERNOTE_THUMB_VERSION', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class GifHeaderDirectory < Directory
     java_import com.drew.metadata.gif.GifHeaderDirectory
 
@@ -1231,9 +1260,10 @@ class ImageVoodoo
       'Has Global Color Table' => ['TAG_HAS_GLOBAL_COLOR_TABLE', :get_string],
       'Transparent Color Index' => ['TAG_TRANSPARENT_COLOR_INDEX', :get_string],
       'Pixel Aspect Ratio' => ['TAG_PIXEL_ASPECT_RATIO', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class IccDirectory < Directory
     java_import com.drew.metadata.icc.IccDirectory
 
@@ -1307,9 +1337,10 @@ class ImageVoodoo
       'Vued' => ['TAG_vued', :get_string],
       'View' => ['TAG_view', :get_string],
       'Apple Multi Language Profile Name' => ['TAG_APPLE_MULTI_LANGUAGE_PROFILE_NAME', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class IptcDirectory < Directory
     java_import com.drew.metadata.iptc.IptcDirectory
 
@@ -1395,9 +1426,10 @@ class ImageVoodoo
       'Object Preview File Format' => ['TAG_OBJECT_PREVIEW_FILE_FORMAT', :get_string],
       'Object Preview File Format Version' => ['TAG_OBJECT_PREVIEW_FILE_FORMAT_VERSION', :get_string],
       'Object Preview Data' => ['TAG_OBJECT_PREVIEW_DATA', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class JfifDirectory < Directory
     java_import com.drew.metadata.jfif.JfifDirectory
 
@@ -1410,9 +1442,10 @@ class ImageVoodoo
       'Units' => ['TAG_UNITS', :get_string],
       'Resx' => ['TAG_RESX', :get_string],
       'Resy' => ['TAG_RESY', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class JpegCommentDirectory < Directory
     java_import com.drew.metadata.jpeg.JpegCommentDirectory
 
@@ -1422,9 +1455,10 @@ class ImageVoodoo
 
     TAGS = {
       'Comment' => ['TAG_COMMENT', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class JpegDirectory < Directory
     java_import com.drew.metadata.jpeg.JpegDirectory
 
@@ -1442,9 +1476,10 @@ class ImageVoodoo
       'Component Data 2' => ['TAG_COMPONENT_DATA_2', :get_string],
       'Component Data 3' => ['TAG_COMPONENT_DATA_3', :get_string],
       'Component Data 4' => ['TAG_COMPONENT_DATA_4', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PhotoshopDirectory < Directory
     java_import com.drew.metadata.photoshop.PhotoshopDirectory
 
@@ -1496,9 +1531,10 @@ class ImageVoodoo
       'Pixel Aspect Ratio' => ['TAG_PIXEL_ASPECT_RATIO', :get_string],
       'Print Info' => ['TAG_PRINT_INFO', :get_string],
       'Print Flags Info' => ['TAG_PRINT_FLAGS_INFO', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PsdHeaderDirectory < Directory
     java_import com.drew.metadata.photoshop.PsdHeaderDirectory
 
@@ -1512,9 +1548,10 @@ class ImageVoodoo
       'Image Width' => ['TAG_IMAGE_WIDTH', :get_long],
       'Bits Per Channel' => ['TAG_BITS_PER_CHANNEL', :get_string],
       'Color Mode' => ['TAG_COLOR_MODE', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PngChromaticitiesDirectory < Directory
     java_import com.drew.metadata.png.PngChromaticitiesDirectory
 
@@ -1531,9 +1568,10 @@ class ImageVoodoo
       'Green Y' => ['TAG_GREEN_Y', :get_string],
       'Blue X' => ['TAG_BLUE_X', :get_string],
       'Blue Y' => ['TAG_BLUE_Y', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class PngDirectory < Directory
     java_import com.drew.metadata.png.PngDirectory
 
@@ -1557,9 +1595,10 @@ class ImageVoodoo
       'Textual Data' => ['TAG_TEXTUAL_DATA', :get_string],
       'Last Modification Time' => ['TAG_LAST_MODIFICATION_TIME', :get_string],
       'Background Color' => ['TAG_BACKGROUND_COLOR', :get_string]
-    }
+    }.freeze
   end
 
+  # GENERATED
   class XmpDirectory < Directory
     java_import com.drew.metadata.xmp.XmpDirectory
 
@@ -1583,9 +1622,8 @@ class ImageVoodoo
       'Datetime Original' => ['TAG_DATETIME_ORIGINAL', :get_string],
       'Datetime Digitized' => ['TAG_DATETIME_DIGITIZED', :get_string],
       'Rating' => ['TAG_RATING', :get_string]
-    }
+    }.freeze
   end
-
 
   DIRECTORY_MAP = {
     'Adobe Jpeg' => AdobeJpegDirectory,
@@ -1625,5 +1663,5 @@ class ImageVoodoo
 
     # Aliases
     'IFD0' => ExifIFD0Directory
-  }
+  }.freeze
 end

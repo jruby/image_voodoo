@@ -1,3 +1,4 @@
+# Google App Engine implementation (does this work?)
 class ImageVoodoo
   java_import com.google.appengine.api.images.Image
   java_import com.google.appengine.api.images.ImagesService

@@ -38,6 +38,7 @@ end
 directories.each do |directory, tag_names|
   class_name = directory.split('.')[-1]
   puts <<"EOS"
+  # GENERATED
   class #{class_name} < Directory
     java_import #{directory}
 
@@ -51,7 +52,7 @@ EOS
     puts "'#{name}' => ['#{original_name}', :get_string],"
   end
   puts <<EOS
-    }
+    }.freeze
   end
 EOS
 end
@@ -61,4 +62,4 @@ directories.each do |directory, _|
   class_name = directory.split('.')[-1]
   puts "'#{humanize_directory_name(class_name)}' => #{class_name},"
 end
-puts '}'
+puts '}.freeze'

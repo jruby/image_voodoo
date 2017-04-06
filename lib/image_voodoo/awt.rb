@@ -1,11 +1,13 @@
 require 'image_voodoo/awt/shapes'
 
+# AWT Implementation
 class ImageVoodoo
   include ImageVoodoo::Shapes
 
   java_import java.awt.Color
   java_import java.awt.RenderingHints
   java_import java.awt.color.ColorSpace
+  java_import java.awt.event.WindowAdapter
   java_import java.awt.geom.AffineTransform
   java_import java.awt.image.BufferedImage
   java_import java.awt.image.ShortLookupTable
@@ -21,9 +23,7 @@ class ImageVoodoo
   java_import javax.swing.JFrame
   java_import javax.imageio.IIOException
 
-  ##
   # A simple swing wrapper around an image voodoo object.
-  #
   class JImagePanel < javax.swing.JPanel
     def initialize(image, x=0, y=0)
       super()
@@ -47,7 +47,7 @@ class ImageVoodoo
   ImageVoodoo::JImagePanel.__persistent__ = true
 
   # Internal class for closing preview window
-  class WindowClosed < java::awt::event::WindowAdapter
+  class WindowClosed < WindowAdapter
     def initialize(block = nil)
       @block = block || proc { java.lang.System.exit(0) }
       super()
@@ -58,9 +58,7 @@ class ImageVoodoo
     end
   end
 
-  ##
-  # *AWT* Creates a viewable frame displaying current image within it.
-  #
+  # *AWT-only* Creates a viewable frame displaying current image within it.
   def preview(&block)
     frame = JFrame.new('Preview')
     frame.add_window_listener WindowClosed.new(block)
@@ -69,20 +67,15 @@ class ImageVoodoo
     frame.visible = true
   end
 
-  ##
-  # *AWT* paint/render to the source
-  #
+  # *AWT-only* paint/render to the source
   def paint(src=dup_src)
     yield src.graphics
     src.graphics.dispose
     ImageVoodoo.new(@io, src, @format)
   end
 
-  ##
   # TODO: Figure out how to determine whether source has alpha or not
-  # Experimental: Read an image from the url source and yield/return that
-  # image.
-  #
+  # Experimental: Read an image from the url source and yield/return that image.
   def self.from_url(source)
     url = java.net.URL.new(source)
     image = java.awt.Toolkit.default_toolkit.create_image(url)
@@ -97,9 +90,7 @@ class ImageVoodoo
     raise ArgumentError.new "Trouble retrieving image: #{$!.message}"
   end
 
-  ##
-  # *AWT* Create an image of width x height filled with a single color.
-  #
+  # *AWT-only* Create an image of width x height filled with a single color.
   def self.canvas(width, height, rgb='000000')
     image = ImageVoodoo.new(@io, BufferedImage.new(width, height, ARGB))
     image.rect(0, 0, width, height, rgb)
@@ -140,10 +131,8 @@ class ImageVoodoo
       ImageVoodoo.new(input_stream, buffered_image, format)
     end
 
-    ##
     # Converts a RGB hex value into a java.awt.Color object or dies trying
     # with an ArgumentError.
-    #
     def hex_to_color(rgb)
       raise ArgumentError.new 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
 
@@ -159,17 +148,13 @@ class ImageVoodoo
   RGB = BufferedImage::TYPE_INT_RGB
   SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
 
-  ##
   # Determines the best colorspace for a new image based on whether the
   # existing image contains an alpha channel or not.
-  #
   def color_type
     @src.color_model.has_alpha ? ARGB : RGB
   end
 
-  ##
   # Make a duplicate of the underlying Java src image
-  #
   def dup_src
     BufferedImage.new to_java.color_model, to_java.raster, true, nil
   end
@@ -185,9 +170,7 @@ class ImageVoodoo
     end
   end
 
-  ##
   # Do simple AWT operation transformation to target.
-  #
   def transform(operation, target=dup_src)
     paint(target) do |g|
       g.draw_image(@src, 0, 0, nil)
@@ -220,22 +203,13 @@ class ImageVoodoo
 
   def correct_orientation_impl
     case metadata.orientation
-    when 2 then
-      flip_horizontally
-    when 3 then
-      rotate 180
-    when 4 then
-      flip_vertically
-    when 5 then
-      flip_horizontally
-      rotate 270
-    when 6 then
-      rotate 90
-    when 7 then
-      flip_horizontally
-      rotate 270
-    else
-      self
+    when 2 then flip_horizontally
+    when 3 then rotate(180)
+    when 4 then flip_vertically
+    when 5 then flip_horizontally && rotate(270)
+    when 6 then rotate(90)
+    when 7 then flip_horizontally && rotate(270)
+    else self
     end
   end
 
@@ -279,17 +253,15 @@ class ImageVoodoo
     new_height = (width * sin + height * cos).floor
 
     paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-      g.java_send :translate, [::Java::int, ::Java::int],
-                  (new_width - width)/2, (new_height - height)/2
-      g.rotate(radians, width / 2, height / 2);
+      g.java_send :translate, [::Java.int, ::Java.int],
+                  (new_width - width) / 2, (new_height - height) / 2
+      g.rotate radians, width / 2, height / 2
       g.draw_image @src, 0, 0, nil
     end
   end
 
-  ##
   # Save using the format string (jpg, gif, etc..) to the open Java File
   # instance passed in.
-  #
   def save_impl(format, file)
     write_new_image format, FileImageOutputStream.new(file)
   end
@@ -310,10 +282,10 @@ class ImageVoodoo
     end
 
     src = if format.downcase == 'jpg'
-      src_without_alpha
-    else
-      @src
-    end
+            src_without_alpha
+          else
+            @src
+          end
 
     writer.write nil, IIOImage.new(src, nil, nil), param
   end

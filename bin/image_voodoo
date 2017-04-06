@@ -9,99 +9,89 @@ original_image = nil
 
 opts = OptionParser.new do |o|
   o.banner = 'Usage: image_voodoo [actions] image_file'
-  o.separator 'Perform some actions on a source image.'
-
+  o.separator 'Perform actions/transformations on an image.'
   o.separator ''
-  o.separator 'Actions are meant to be chained. Examples:'
-  o.separator '  # Print the dimensions'
-  o.separator '  image_voodoo --dim small.jpg'
+  o.separator 'Examples:'
+  o.separator '  image_voodoo --dim small.jpg     # Print the dimensions'
   o.separator ''
-  o.separator '  # Convert to a thumbnail, preview, and then save the result'
+  o.separator '  # Make a thumbnail, preview it, and then save it.'
   o.separator '  image_voodoo --thumbnail 50 --preview --save thumb.png large.jpg'
   o.separator ''
-  o.separator '  # Convert source to 3 thumbnails, showing dimensions and'
-  o.separator '  # previewing along the way'
+  o.separator '  # Make 2 thumbnails, showing dimensions and previewing them'
   o.separator '  image_voodoo --dim --resize 50x50 --dim --preview --save t1.jpg'
-  o.separator '    --pop --resize 40x40 --dim --preview --save t2.jpg'
-  o.separator '    --pop --resize 30x30 --dim --preview --save t3.jpg image.jpg'
-
+  o.separator '    --pop --resize 40x40 --dim --preview --save t2.jpg image.jpg'
   o.separator ''
   o.separator 'Actions:'
 
-  o.on('-a', '--alpha color_value', 'Make color transparent in image') do |c|
-    if c !~ /[[:xdigit:]]{6,6}/
-      o.usage 'color_value is rrggbb in hexidecimal format'
-    end
-    actions << lambda { |img| img.alpha(c) }
+  o.on('-a', '--alpha rrggbb', 'Make color transparent in image') do |c|
+    o.usage 'rrggbb is in hexidecimal format' if c !~ /[[:xdigit:]]{6,6}/
+    actions << ->(img) { img.alpha(c) }
   end
 
   o.on('-b', '--brightness SCALE,OFFSET', 'Adjust brightness') do |args|
     scale, offset = args.split(/,/).map(&:to_f)
     o.usage 'You need to specify proper scale and offset' unless scale && offset
-    actions << lambda { |img| img.adjust_brightness(scale, offset) }
+    actions << ->(img) { img.adjust_brightness(scale, offset) }
   end
 
   o.on('-B', '--border WIDTH,COLOR,STYLE', 'Add a simple border') do |args|
     width, color, style = args.split(/,/)
-    options = { :width => width, :color => color, :style => style }
-
-    actions << lambda { |img| img.add_border(options) }
+    options = { width: width, color: color, style: style }
+    actions << ->(img) { img.add_border(options) }
   end
 
   o.on('-d', '--dimensions', 'Print the image dimensions') do
-    actions << lambda { |img| puts "#{img.width}x#{img.height}"; img }
+    actions << ->(img) { img.tap { puts "#{img.width}x#{img.height}" } }
   end
 
   o.on('-g', '--greyscale', 'Convert image to greyscale') do
-    actions << lambda { |img| img.greyscale }
+    actions << ->(img) { img.greyscale }
   end
 
   o.on('-h', '--flip_horizontally') do
-    actions << lambda { |img| img.flip_horizontally }
+    actions << ->(img) { img.flip_horizontally }
   end
 
   o.on('-m', '--metadata') do
-    actions << lambda { |img| puts img.metadata }
+    actions << ->(img) { img.tap { puts img.metadata } }
   end
 
   o.on('-n', '--negative', 'Make a negative out of the image') do
-    actions << lambda { |img| img.negative }
+    actions << ->(img) { img.negative }
   end
 
   o.on('-o', '--orient', 'Rotate image to orient it based on metadata') do
-    actions << lambda { |img| img.correct_orientation }
+    actions << ->(img) { img.correct_orientation }
   end
 
   o.on('-q', '--quality 0..1', Float, 'Set % of quality for lossy compression') do |quality|
-    actions << lambda { |img| img.quality(quality) }
+    actions << ->(img) { img.quality(quality) }
   end
 
   o.on('-R', '--rotate 0..360', Float, 'Set angle to rotate image') do |angle|
-    actions << lambda { |img| img.rotate(angle.to_f) }
+    actions << ->(img) { img.rotate(angle.to_f) }
   end
 
-  o.on('-r', '--resize WIDTHxHEIGHT', 'Create a new image with the specified', 'dimensions') do |dim|
+  o.on('-r', '--resize WIDTHxHEIGHT', 'Make a new resized image') do |dim|
     width, height = dim.split(/x/i).map(&:to_i)
     o.usage 'You need to specify proper dimensions' unless width && width > 0 && height && height > 0
-    actions << lambda { |img| img.resize(width, height) }
+    actions << ->(img) { img.resize(width, height) }
   end
 
-
   o.on('-s', '--save FILENAME', 'Save the results to a new file') do |f|
-    actions << lambda { |img| img.save(f); img }
+    actions << ->(img) { img.tap { img.save(f) } }
   end
 
   o.on('-t', '--thumbnail SIZE', Integer, 'Create a thumbnail of the given size') do |size|
-    actions << lambda { |img| img.thumbnail(size) }
+    actions << ->(img) { img.thumbnail(size) }
   end
 
-  o.on('-v', '--flip_vertically') do
-    actions << lambda { |img| img.flip_vertically }
-  end
+  o.on('-v', '--flip_vertically') { actions << ->(img) { img.flip_vertically } }
 
-  o.on('-p', '--preview', 'Preview the image. Close the frame window',
-    'to continue, or quit the application to', 'abort the action pipeline') do
-
+  o.on('-p', '--preview',
+       'Preview the image. Close the frame window',
+       'to continue, or quit the application to',
+       'abort the action pipeline') do
     headless = false
     actions << lambda do |img|
       done = false
@@ -112,24 +102,21 @@ opts = OptionParser.new do |o|
   end
 
   o.on('--push', 'Save the current image to be popped later') do
-    actions << lambda { |img| images << img; img }
+    actions << ->(img) { img.tap { images << img } }
   end
 
-  o.on('--pop', 'Revert back to the previous saved image', 'or the original source image') do
-    actions << lambda { |_| images.pop || original_image }
+  o.on('--pop', 'Revert back to the previous image') do
+    actions << ->() { images.pop || original_image }
   end
 
   o.on('-f', '--format', 'Print the image format') do
-    actions << lambda { |img| puts img.format; img }
+    actions << ->(img) { img.tap { img.format } }
   end
 
-  o.on_tail('-h', '--help', 'Show this message') do
-    puts o
-    exit 0
-  end
+  o.on_tail('-h', '--help', 'Show this message') { o.usage }
 
-  def o.usage(msg)
-    puts msg
+  def o.usage(msg=nil)
+    puts msg if msg
     puts self
     exit 1
   end

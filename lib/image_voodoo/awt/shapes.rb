@@ -1,4 +1,5 @@
 class ImageVoodoo
+  # (Experimental) An attempt at some primitive drawing in images.
   module Shapes
     # FIXME: Move and rewrite in terms of new shape
     ##
