@@ -79,8 +79,14 @@ class ImageVoodoo
       @block = block || proc { java.lang.System.exit(0) }
     end
 
-    def method_missing(meth, *args); end
-
+    def noop; end
+    alias windowActivated noop
+    alias windowClosed noop
+    alias windowDeactivated noop
+    alias windowDeiconified noop
+    alias windowIconified noop
+    alias windowOpened noop
+    
     def windowClosing(_)
       @block.call
     end
