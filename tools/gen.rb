@@ -10,7 +10,7 @@ def normalize_directory_name(path)
 end
 
 def normalize_tag_name(capname)
-  name = capname.split('_').map {|e| e.capitalize }.join(' ')
+  name = capname.split('_').map(&:capitalize).join(' ')
   [name, "TAG_#{capname}"]
 end
 

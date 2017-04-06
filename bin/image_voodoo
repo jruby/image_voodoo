@@ -36,7 +36,7 @@ opts = OptionParser.new do |o|
   end
 
   o.on("-b", "--brightness SCALE,OFFSET", "Adjust brightness") do |args|
-    scale, offset = args.split(/,/).map {|v| v.to_f}
+    scale, offset = args.split(/,/).map(&:to_f)
     o.usage "You need to specify proper scale and offset" unless scale && offset
     actions << lambda {|img| img.adjust_brightness(scale, offset) }
   end
@@ -81,7 +81,7 @@ opts = OptionParser.new do |o|
   end
 
   o.on("-r", "--resize WIDTHxHEIGHT", "Create a new image with the specified", "dimensions") do |dim|
-    width, height = dim.split(/x/i).map {|v| v.to_i}
+    width, height = dim.split(/x/i).map(&:to_i)
     o.usage "You need to specify proper dimensions" unless width && width > 0 && height && height > 0
     actions << lambda {|img| img.resize(width,height) }
   end
