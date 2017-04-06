@@ -74,18 +74,11 @@ class ImageVoodoo
   ImageVoodoo::JImagePanel.__persistent__ = true
 
   # Internal class for closing preview window
-  class WindowClosed
+  class WindowClosed < java::awt::event::WindowAdapter
     def initialize(block = nil)
       @block = block || proc { java.lang.System.exit(0) }
+      super()
     end
-
-    def noop; end
-    alias windowActivated noop
-    alias windowClosed noop
-    alias windowDeactivated noop
-    alias windowDeiconified noop
-    alias windowIconified noop
-    alias windowOpened noop
     
     def windowClosing(_)
       @block.call
