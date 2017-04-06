@@ -26,41 +26,32 @@ if ext != 'png'
 end
 
 puts "# of iterations = #{max}"
-Benchmark::bm(20) do |x|
-  x.report('null_time') {
-    max.times do
-    end
-  }
+Benchmark.bm(20) do |x|
+  x.report('null_time') { max.times {} }
 
-  x.report('cropped') {
+  x.report('cropped') do
     max.times do
       ImageScience.with_image(file) do |img|
-        img.cropped_thumbnail(100) do |thumb|
-          thumb.save("blah_cropped.#{ext}")
-        end
+        img.cropped_thumbnail(100) { |thumb| thumb.save("blah_cropped.#{ext}") }
       end
     end
-  }
+  end
 
-  x.report('proportional') {
+  x.report('proportional') do
     max.times do
       ImageScience.with_image(file) do |img|
-        img.thumbnail(100) do |thumb|
-          thumb.save("blah_thumb.#{ext}")
-        end
+        img.thumbnail(100) { |thumb| thumb.save("blah_thumb.#{ext}") }
       end
     end
-  }
+  end
 
-  x.report('resize') {
+  x.report('resize') do
     max.times do
       ImageScience.with_image(file) do |img|
-        img.resize(200, 200) do |resize|
-          resize.save("blah_resize.#{ext}")
-        end
+        img.resize(200, 200) { |resize| resize.save("blah_resize.#{ext}") }
       end
     end
-  }
+  end
 end
 
 # File.unlink(*Dir["blah*#{ext}"])
