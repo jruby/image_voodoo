@@ -25,13 +25,12 @@ end if ext != "png"
 puts "# of iterations = #{max}"
 Benchmark::bm(20) do |x|
   x.report("null_time") {
-    for i in 0..max do
-      # do nothing
+    max.times do
     end
   }
 
   x.report("cropped") {
-    for i in 0..max do
+    max.times do
       ImageScience.with_image(file) do |img|
         img.cropped_thumbnail(100) do |thumb|
           thumb.save("blah_cropped.#{ext}")
@@ -41,7 +40,7 @@ Benchmark::bm(20) do |x|
   }
 
   x.report("proportional") {
-    for i in 0..max do
+    max.times do
       ImageScience.with_image(file) do |img|
         img.thumbnail(100) do |thumb|
           thumb.save("blah_thumb.#{ext}")
@@ -51,7 +50,7 @@ Benchmark::bm(20) do |x|
   }
 
   x.report("resize") {
-    for i in 0..max do
+    max.times do
       ImageScience.with_image(file) do |img|
         img.resize(200, 200) do |resize|
           resize.save("blah_resize.#{ext}")
