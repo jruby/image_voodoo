@@ -34,7 +34,7 @@ class TestImageScience < Test::Unit::TestCase
 
   def test_class_with_image_missing
     assert_raises ArgumentError do
-      ImageScience.with_image @path + "nope" do |img|
+      ImageScience.with_image @path + "nope" do
         flunk
       end
     end
@@ -42,7 +42,7 @@ class TestImageScience < Test::Unit::TestCase
 
   def test_class_with_image_missing_with_img_extension
     assert_raises ArgumentError do
-      ImageScience.with_image("nope#{@path}") do |img|
+      ImageScience.with_image("nope#{@path}") do
         flunk
       end
     end
@@ -50,7 +50,7 @@ class TestImageScience < Test::Unit::TestCase
 
   def test_class_with_image_return_nil_on_bogus_image
     File.open(@tmppath, "w") {|f| f << "bogus image file"}
-    assert_nil ImageScience.with_image(@tmppath) do |img|
+    assert_nil ImageScience.with_image(@tmppath) do
       flunk
     end
   end

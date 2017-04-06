@@ -3,6 +3,7 @@ require 'image_voodoo/awt/shapes'
 class ImageVoodoo
   include ImageVoodoo::Shapes
 
+  java_import java.awt.Color
   java_import java.awt.RenderingHints
   java_import java.awt.color.ColorSpace
   java_import java.awt.geom.AffineTransform
@@ -22,7 +23,6 @@ class ImageVoodoo
 
   # FIXME: Move and rewrite in terms of new shape
   ##
-  #
   # *AWT* (experimental) Add a border to the image and yield/return a new
   # image.  The following options are supported:
   #   - width: How thick is the border (default: 3)
@@ -49,7 +49,6 @@ class ImageVoodoo
   end
 
   ##
-  #
   # A simple swing wrapper around an image voodoo object.
   #
   class JImagePanel < javax.swing.JPanel
@@ -84,7 +83,6 @@ class ImageVoodoo
   end
 
   ##
-  #
   # *AWT* Creates a viewable frame displaying current image within it.
   #
   def preview(&block)
@@ -105,7 +103,6 @@ class ImageVoodoo
   end
 
   ##
-  #
   # TODO: Figure out how to determine whether source has alpha or not
   # Experimental: Read an image from the url source and yield/return that
   # image.
@@ -166,16 +163,16 @@ class ImageVoodoo
       input_stream.reset
       ImageVoodoo.new(input_stream, buffered_image, format)
     end
-  end
 
-  #
-  # Converts a RGB hex value into a java.awt.Color object or dies trying
-  # with an ArgumentError.
-  #
-  def self.hex_to_color(rgb)
-    raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
+    ##
+    # Converts a RGB hex value into a java.awt.Color object or dies trying
+    # with an ArgumentError.
+    #
+    def hex_to_color(rgb)
+      raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
 
-    java.awt.Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
+      Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
+    end
   end
   
   private
@@ -186,7 +183,7 @@ class ImageVoodoo
   RGB = BufferedImage::TYPE_INT_RGB
   SCALE_SMOOTH = java.awt.Image::SCALE_SMOOTH
 
-  #
+  ##
   # Determines the best colorspace for a new image based on whether the
   # existing image contains an alpha channel or not.
   #
@@ -194,7 +191,7 @@ class ImageVoodoo
     @src.color_model.has_alpha ? ARGB : RGB
   end
 
-  #
+  ##
   # Make a duplicate of the underlying Java src image
   #
   def dup_src
@@ -212,7 +209,7 @@ class ImageVoodoo
     end
   end
 
-  #
+  ##
   # Do simple AWT operation transformation to target.
   #
   def transform(operation, target=dup_src)
@@ -310,7 +307,7 @@ class ImageVoodoo
     end
   end
 
-  #
+  ##
   # Save using the format string (jpg, gif, etc..) to the open Java File
   # instance passed in.
   #

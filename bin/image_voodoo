@@ -116,7 +116,7 @@ opts = OptionParser.new do |o|
   end
 
   o.on("--pop", "Revert back to the previous saved image", "or the original source image") do
-    actions << lambda {|img| images.pop || original_image }
+    actions << lambda {|_| images.pop || original_image }
   end
 
   o.on("-f", "--format", "Print the image format") do

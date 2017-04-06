@@ -22,7 +22,7 @@ class ImageVoodoo
 
   class << self
     private
-    
+
     def with_bytes_impl(bytes)
       image = ImageServicesFactory.make_image(bytes)
       ImageVoodoo.new bytes, image, image.format.to_s.upcase
