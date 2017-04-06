@@ -18,7 +18,7 @@ class ImageVoodoo
     # *AWT* Draw a rounded square
     #
     def square_rounded(x, y, dim, rgb, arc_width=0, fill=true)
-      rect_rounded(x,y, dim, dim, rgb, arc_width, arc_width, fill)
+      rect_rounded(x, y, dim, dim, rgb, arc_width, arc_width, fill)
     end
 
     ##
@@ -44,4 +44,3 @@ class ImageVoodoo
     end
   end
 end
-

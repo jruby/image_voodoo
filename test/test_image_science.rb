@@ -1,9 +1,11 @@
 require 'test/unit/testcase'
-require 'test/unit' if $0 == __FILE__
+require 'test/unit' if $PROGRAM_NAME == __FILE__
 require 'image_science'
 
 class TestImageScience < Test::Unit::TestCase
-  def deny x; assert ! x; end
+  def deny x
+    assert !x
+  end
 
   def setup
     @path = 'test/pix.png'

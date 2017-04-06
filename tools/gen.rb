@@ -59,4 +59,3 @@ directories.each do |directory, _|
   puts "'#{humanize_directory_name(class_name)}' => #{class_name},"
 end
 puts '}'
-

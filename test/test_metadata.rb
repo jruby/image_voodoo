@@ -1,5 +1,5 @@
 require 'test/unit/testcase'
-require 'test/unit' if $0 == __FILE__
+require 'test/unit' if $PROGRAM_NAME == __FILE__
 require 'image_voodoo'
 
 IMAGE_DIR = File.join File.dirname(__FILE__), '..', '..', 'metadata-extractor-images'

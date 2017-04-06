@@ -43,7 +43,7 @@ opts = OptionParser.new do |o|
 
   o.on('-B', '--border WIDTH,COLOR,STYLE', 'Add a simple border') do |args|
     width, color, style = args.split(/,/)
-    options = {:width => width, :color => color, :style => style }
+    options = { :width => width, :color => color, :style => style }
 
     actions << lambda {|img| img.add_border(options) }
   end
@@ -83,7 +83,7 @@ opts = OptionParser.new do |o|
   o.on('-r', '--resize WIDTHxHEIGHT', 'Create a new image with the specified', 'dimensions') do |dim|
     width, height = dim.split(/x/i).map(&:to_i)
     o.usage 'You need to specify proper dimensions' unless width && width > 0 && height && height > 0
-    actions << lambda {|img| img.resize(width,height) }
+    actions << lambda {|img| img.resize(width, height) }
   end
 
 

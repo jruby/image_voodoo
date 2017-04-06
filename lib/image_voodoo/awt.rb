@@ -79,7 +79,7 @@ class ImageVoodoo
       @block = block || proc { java.lang.System.exit(0) }
     end
 
-    def method_missing(meth,*args); end
+    def method_missing(meth, *args); end
 
     def windowClosing(_)
       @block.call
@@ -175,7 +175,7 @@ class ImageVoodoo
     def hex_to_color(rgb)
       raise ArgumentError.new 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
 
-      Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
+      Color.new(rgb[0, 2].to_i(16), rgb[2, 2].to_i(16), rgb[4, 2].to_i(16))
     end
   end
 
