@@ -31,7 +31,7 @@ class ImageVoodoo
   #
   def add_border(options = {})
     border_width = options[:width].to_i || 2
-    color = hex_to_color(options[:color]) || hex_to_color("000000")
+    color = hex_to_color(options[:color]) || hex_to_color('000000')
     style = options[:style]
     style = nil if style.to_sym == :plain
     new_width, new_height = width + 2*border_width, height + 2*border_width
@@ -90,7 +90,7 @@ class ImageVoodoo
   # *AWT* Creates a viewable frame displaying current image within it.
   #
   def preview(&block)
-    frame = JFrame.new("Preview")
+    frame = JFrame.new('Preview')
     frame.add_window_listener WindowClosed.new(block)
     frame.set_bounds 0, 0, width + 20, height + 40
     frame.add JImagePanel.new(self, 10, 10)
@@ -114,7 +114,7 @@ class ImageVoodoo
   def self.from_url(source)
     url = java.net.URL.new(source)
     image = java.awt.Toolkit.default_toolkit.create_image(url)
-    tracker = java.awt.MediaTracker.new(java.awt.Label.new(""))
+    tracker = java.awt.MediaTracker.new(java.awt.Label.new(''))
     tracker.addImage(image, 0);
     tracker.waitForID(0)
     target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g|
@@ -173,7 +173,7 @@ class ImageVoodoo
     # with an ArgumentError.
     #
     def hex_to_color(rgb)
-      raise ArgumentError.new "hex rrggbb needed" if rgb !~ /[[:xdigit:]]{6,6}/
+      raise ArgumentError.new 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
 
       Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
     end
@@ -333,7 +333,7 @@ class ImageVoodoo
       param.compression_quality = @quality
     end
 
-    src = if format.downcase == "jpg"
+    src = if format.downcase == 'jpg'
       src_without_alpha
     else
       @src

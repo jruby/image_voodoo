@@ -166,7 +166,7 @@ class ImageVoodoo
   # formats like PNG of JPEG.  For others it will be ignored.
   def quality(amount)
     if amount < 0.0 || amount > 1.0
-      raise ArgumentError.new "Quality must be between 0.0 and 1.0"
+      raise ArgumentError.new 'Quality must be between 0.0 and 1.0'
     end
 
     target = self.dup
@@ -201,7 +201,7 @@ class ImageVoodoo
   #
   def save(file)
     format = File.extname(file)
-    return false if format == ""
+    return false if format == ''
     format = format[1..-1].downcase
     guard { save_impl(format, JFile.new(file)) }
     true

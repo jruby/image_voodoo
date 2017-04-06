@@ -17,7 +17,7 @@ end
 # 'ExifSubIFDDirectory' => 'Exif Sub IFD0'
 def humanize_directory_name(s)
   s = s.gsub('Directory', '')
-  s.split(/([A-Z]+[a-z]+)/).map {|a| a == "" ? nil : a }.compact.join(' ')
+  s.split(/([A-Z]+[a-z]+)/).map {|a| a == '' ? nil : a }.compact.join(' ')
 end
 
 io = $stdin
@@ -34,27 +34,29 @@ end
 
 directories.each do |directory, tag_names|
   class_name = directory.split('.')[-1]
-  puts "class #{class_name} < Directory"
-  puts "  java_import #{directory}"
-  puts ""
-  puts "  def self.directory_class"
-  puts "    #{directory}"
-  puts "  end"
-  puts ""
-  puts "  TAGS = {"
+  puts <<"EOS"
+  class #{class_name} < Directory
+    java_import #{directory}
+
+    def self.directory_class
+      #{directory}
+    end"
+
+    TAGS = {
+EOS
   tag_names.each do |name, original_name|
-    puts "    '#{name}' => ['#{original_name}', :get_string],"
+    puts "'#{name}' => ['#{original_name}', :get_string],"
   end
-  puts "  }"
-  puts "end"
-  puts ""
+  puts <<EOS
+    }
+  end
+EOS
 end
 
-puts ""
-puts "DIRECTORY_MAP = {"
+puts 'DIRECTORY_MAP = {'
 directories.each do |directory, _|
   class_name = directory.split('.')[-1]
-  puts "  '#{humanize_directory_name(class_name)}' => #{class_name},"
+  puts "'#{humanize_directory_name(class_name)}' => #{class_name},"
 end
-puts "}"
+puts '}'
 
