@@ -23,7 +23,7 @@ class TestImageScience < Test::Unit::TestCase
       assert img.save(@tmppath)
     end
 
-    assert File.exists?(@tmppath)
+    assert File.exist?(@tmppath)
 
     ImageScience.with_image @tmppath do |img|
       assert_kind_of ImageScience, img
@@ -62,7 +62,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    assert File.exists?(@tmppath)
+    assert File.exist?(@tmppath)
 
     ImageScience.with_image @tmppath do |img|
       assert_kind_of ImageScience, img
@@ -78,7 +78,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    assert File.exists?(@tmppath)
+    assert File.exist?(@tmppath)
 
     ImageScience.with_image @tmppath do |img|
       assert_kind_of ImageScience, img
@@ -96,7 +96,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    deny File.exists?(@tmppath)
+    deny File.exist?(@tmppath)
 
     assert_raises ArgumentError do
       ImageScience.with_image @path do |img|
@@ -106,7 +106,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    deny File.exists?(@tmppath)
+    deny File.exist?(@tmppath)
   end
 
   def test_resize_negative
@@ -118,7 +118,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    deny File.exists?(@tmppath)
+    deny File.exist?(@tmppath)
 
     assert_raises ArgumentError do
       ImageScience.with_image @path do |img|
@@ -128,7 +128,7 @@ class TestImageScience < Test::Unit::TestCase
       end
     end
 
-    deny File.exists?(@tmppath)
+    deny File.exist?(@tmppath)
   end
 
   def test_image_format_retrieval
@@ -166,6 +166,6 @@ class TestImageScience < Test::Unit::TestCase
       assert new_img.save(@tmppath)
     end
 
-    assert File.exists?(@tmppath)
+    assert File.exist?(@tmppath)
   end
 end
