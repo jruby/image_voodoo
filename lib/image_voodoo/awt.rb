@@ -78,8 +78,12 @@ class ImageVoodoo
     def initialize(block = nil)
       @block = block || proc { java.lang.System.exit(0) }
     end
+    
     def method_missing(meth,*args); end
-    def windowClosing(event); @block.call; end
+    
+    def windowClosing(_)
+      @block.call
+    end
   end
 
   ##
