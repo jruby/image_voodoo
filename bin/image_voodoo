@@ -136,7 +136,7 @@ opts = OptionParser.new do |o|
 end
 opts.parse!(ARGV)
 opts.usage("You need to supply a source image filename.") unless ARGV.first
-opts.usage("You need to supply one or more actions.") unless actions.size > 0
+opts.usage("You need to supply one or more actions.") if actions.empty?
 
 # For this binstub we only want to load non-headless if we are using
 # the preview feature. top of See lib/image_voodoo.rb for more info...

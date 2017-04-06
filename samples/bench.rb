@@ -16,7 +16,7 @@ if Config::CONFIG['host_os'] =~ /darwin/ then
   system "screencapture -SC #{file}"
 else
   abort "You need to plonk down #{file} or buy a mac"
-end unless test ?f, "#{file}"
+end unless test ?f, file
 
 ImageScience.with_image(file.sub(/#{ext}$/, 'png')) do |img|
   img.save(file)

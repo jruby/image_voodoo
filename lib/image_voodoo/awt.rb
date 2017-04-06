@@ -78,9 +78,9 @@ class ImageVoodoo
     def initialize(block = nil)
       @block = block || proc { java.lang.System.exit(0) }
     end
-    
+
     def method_missing(meth,*args); end
-    
+
     def windowClosing(_)
       @block.call
     end
@@ -135,7 +135,7 @@ class ImageVoodoo
 
   class << self
     private
-    
+
     def with_image_impl(file)
       format = detect_format_from_input(file)
       buffered_image = read_image_from_input(file)
@@ -178,7 +178,7 @@ class ImageVoodoo
       Color.new(rgb[0,2].to_i(16), rgb[2,2].to_i(16), rgb[4,2].to_i(16))
     end
   end
-  
+
   private
 
   NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
@@ -281,7 +281,7 @@ class ImageVoodoo
 
   def metadata_impl
     require 'image_voodoo/metadata'
-    
+
     @metadata ||= ImageVoodoo::Metadata.new(@io)
   end
 
@@ -303,7 +303,6 @@ class ImageVoodoo
     new_height = (width * sin + height * cos).floor
 
     paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-      
       g.java_send :translate, [::Java::int, ::Java::int],
                   (new_width - width)/2, (new_height - height)/2
       g.rotate(radians, width / 2, height / 2);

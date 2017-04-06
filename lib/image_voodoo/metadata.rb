@@ -15,7 +15,7 @@ class ImageVoodoo
     #
     # See Directory#exists? if you want to make sure the group you are
     # requesting actually exists or not.
-    # 
+    #
     def [](dirname)
       dirclass = DIRECTORY_MAP[dirname.to_s]
       raise ArgumentError.new "Uknown metadata group: #{dirname}" unless dirclass
@@ -1625,5 +1625,5 @@ class ImageVoodoo
 
     # Aliases
     'IFD0' => ExifIFD0Directory,
-  }  
+  }
 end

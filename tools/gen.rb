@@ -2,7 +2,7 @@
 # in appropriate access methods so I generate with get_string and then manually
 # update.  In future versions I will just run this twice with old and new src
 # and manually splice in new data (or fixes).
-# 
+#
 # % find ../metadata-extractor/Source/ -name '*Directory.java' | xargs grep TAG_ | grep 'public static final' | ruby tools/gen.rb
 
 def normalize_directory_name(path)
@@ -57,5 +57,4 @@ directories.each do |directory, _|
   puts "  '#{humanize_directory_name(class_name)}' => #{class_name},"
 end
 puts "}"
-  
 

@@ -6,7 +6,7 @@ IMAGE_DIR = File.join File.dirname(__FILE__), '..', '..', 'metadata-extractor-im
 
 # FIXME: If we end up running on travis or other tool this should be ignored
 # subdir to this project and probably clone repo into that subdir
-unless File.exist? IMAGE_DIR
+if !File.exist? IMAGE_DIR
   puts "To run this test you must clone: https://github.com/drewnoakes/metadata-extractor-images.git into a sibling directory to image_voodoo"
 else
   class TestImageVoodooMetadata < Test::Unit::TestCase

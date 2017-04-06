@@ -5,7 +5,6 @@
 unless defined? ImageVoodoo::NEEDS_HEAD
   java.lang.System.set_property 'java.awt.headless', 'true'
 end
-  
 
 ##
 #
