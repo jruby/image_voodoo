@@ -21,7 +21,7 @@ end
 # 'ExifSubIFDDirectory' => 'Exif Sub IFD0'
 def humanize_directory_name(s)
   s = s.gsub('Directory', '')
-  s.split(/([A-Z]+[a-z]+)/).map {|a| a == '' ? nil : a }.compact.join(' ')
+  s.split(/([A-Z]+[a-z]+)/).map { |a| a == '' ? nil : a }.compact.join(' ')
 end
 
 io = $stdin
@@ -29,11 +29,10 @@ directories = {}
 
 io.readlines.each do |line|
   #  .../IptcDirectory.java: public static final int TAG_BY_LINE = 80;
-  if %r{Source/[/]?(?<directory_name>.*).java:.*TAG_(?<tag_name>[\S]+)} =~ line
-    directory_name = normalize_directory_name directory_name
-    directories[directory_name] ||= []
-    directories[directory_name] << normalize_tag_name(tag_name)
-  end
+  next if %r{Source/[/]?(?<dir_name>.*).java:.*TAG_(?<tag_name>[\S]+)} !~ line
+  directory_name = normalize_directory_name dir_name
+  directories[directory_name] ||= []
+  directories[directory_name] << normalize_tag_name(tag_name)
 end
 
 directories.each do |directory, tag_names|

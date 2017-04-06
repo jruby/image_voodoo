@@ -21,33 +21,6 @@ class ImageVoodoo
   java_import javax.swing.JFrame
   java_import javax.imageio.IIOException
 
-  # FIXME: Move and rewrite in terms of new shape
-  ##
-  # *AWT* (experimental) Add a border to the image and yield/return a new
-  # image.  The following options are supported:
-  #   - width: How thick is the border (default: 3)
-  #   - color: Which color is the border (in rrggbb hex value)
-  #   - style: etched, raised, plain (default: plain)
-  #
-  def add_border(options = {})
-    border_width = options[:width].to_i || 2
-    color = hex_to_color(options[:color]) || hex_to_color('000000')
-    style = options[:style]
-    style = nil if style.to_sym == :plain
-    new_width, new_height = width + 2*border_width, height + 2*border_width
-    target = paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-      g.color = color
-      if style
-        raised = style.to_sym == :raised ? true : false
-        g.fill3DRect(0, 0, new_width, new_height, raised)
-      else
-        g.fill_rect(0, 0, new_width, new_height)
-      end
-      g.draw_image(@src, nil, border_width, border_width)
-    end
-    block_given? ? yield(target) : target
-  end
-
   ##
   # A simple swing wrapper around an image voodoo object.
   #
@@ -267,11 +240,15 @@ class ImageVoodoo
   end
 
   def flip_horizontally_impl
-    paint {|g| g.draw_image @src, 0, 0, width, height, width, 0, 0, height, nil}
+    paint do |g|
+      g.draw_image @src, 0, 0, width, height, width, 0, 0, height, nil
+    end
   end
 
   def flip_vertically_impl
-    paint {|g| g.draw_image @src, 0, 0, width, height, 0, height, width, 0, nil}
+    paint do |g|
+      g.draw_image @src, 0, 0, width, height, 0, height, width, 0, nil
+    end
   end
 
   def greyscale_impl

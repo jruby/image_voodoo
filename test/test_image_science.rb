@@ -3,8 +3,14 @@ require 'test/unit' if $PROGRAM_NAME == __FILE__
 require 'image_science'
 
 class TestImageScience < Test::Unit::TestCase
-  def deny x
+  def deny(x)
     assert !x
+  end
+
+  def similar_image?(w, h, img)
+    assert_kind_of ImageScience, img
+    assert_equal h, img.height
+    assert_equal w, img.width
   end
 
   def setup
@@ -19,118 +25,68 @@ class TestImageScience < Test::Unit::TestCase
 
   def test_class_with_image
     ImageScience.with_image @path do |img|
-      assert_kind_of ImageScience, img
-      assert_equal @h, img.height
-      assert_equal @w, img.width
+      similar_image? @w, @h, img
       assert img.save(@tmppath)
     end
 
-    assert File.exist?(@tmppath)
-
-    ImageScience.with_image @tmppath do |img|
-      assert_kind_of ImageScience, img
-      assert_equal @h, img.height
-      assert_equal @w, img.width
-    end
+    ImageScience.with_image(@tmppath) { |img| similar_image? @w, @h, img }
   end
 
   def test_class_with_image_missing
     assert_raises ArgumentError do
-      ImageScience.with_image "#{@path}nope" do
-        flunk
-      end
+      ImageScience.with_image("#{@path}nope") { flunk }
     end
   end
 
   def test_class_with_image_missing_with_img_extension
     assert_raises ArgumentError do
-      ImageScience.with_image("nope#{@path}") do
-        flunk
-      end
+      ImageScience.with_image("nope#{@path}") { flunk }
     end
   end
 
   def test_class_with_image_return_nil_on_bogus_image
     File.open(@tmppath, 'w') { |f| f << 'bogus image file' }
-    assert_nil ImageScience.with_image(@tmppath) do
-      flunk
-    end
+    assert_nil ImageScience.with_image(@tmppath) { flunk }
   end
 
   def test_resize
     ImageScience.with_image @path do |img|
-      img.resize(25, 25) do |thumb|
-        assert thumb.save(@tmppath)
-      end
+      img.resize(25, 25) { |thumb| assert thumb.save(@tmppath) }
     end
 
-    assert File.exist?(@tmppath)
-
-    ImageScience.with_image @tmppath do |img|
-      assert_kind_of ImageScience, img
-      assert_equal 25, img.height
-      assert_equal 25, img.width
-    end
+    ImageScience.with_image(@tmppath) { |img| similar_image? 25, 25, img }
   end
 
   def test_resize_floats
     ImageScience.with_image @path do |img|
-      img.resize(25.2, 25.7) do |thumb|
-        assert thumb.save(@tmppath)
-      end
+      img.resize(25.2, 25.7) { |thumb| assert thumb.save(@tmppath) }
     end
 
-    assert File.exist?(@tmppath)
-
-    ImageScience.with_image @tmppath do |img|
-      assert_kind_of ImageScience, img
-      assert_equal 25, img.height
-      assert_equal 25, img.width
-    end
+    ImageScience.with_image(@tmppath) { |img| similar_image? 25, 25, img }
   end
 
   def test_resize_zero
-    assert_raises ArgumentError do
-      ImageScience.with_image @path do |img|
-        img.resize(0, 25) do |thumb|
-          assert thumb.save(@tmppath)
+    [[0, 25], [25, 0], [0, 0]].each do |w, h|
+      assert_raises ArgumentError do
+        ImageScience.with_image @path do |img|
+          img.resize(w, h) { |thumb| assert thumb.save(@tmppath) }
         end
       end
+
+      deny File.exist?(@tmppath)
     end
-
-    deny File.exist?(@tmppath)
-
-    assert_raises ArgumentError do
-      ImageScience.with_image @path do |img|
-        img.resize(25, 0) do |thumb|
-          assert thumb.save(@tmppath)
-        end
-      end
-    end
-
-    deny File.exist?(@tmppath)
   end
 
   def test_resize_negative
-    assert_raises ArgumentError do
-      ImageScience.with_image @path do |img|
-        img.resize(-25, 25) do |thumb|
-          assert thumb.save(@tmppath)
+    [[-25, 25], [25, -25], [-25, -25]].each do |w, h|
+      assert_raises ArgumentError do
+        ImageScience.with_image @path do |img|
+          img.resize(w, h) { |thumb| assert thumb.save(@tmppath) }
         end
       end
+
+      deny File.exist?(@tmppath)
     end
-
-    deny File.exist?(@tmppath)
-
-    assert_raises ArgumentError do
-      ImageScience.with_image @path do |img|
-        img.resize(25, -25) do |thumb|
-          assert thumb.save(@tmppath)
-        end
-      end
-    end
-
-    deny File.exist?(@tmppath)
   end
 
   def test_image_format_retrieval

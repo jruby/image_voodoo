@@ -15,6 +15,7 @@ else
       @path_gps = File.join IMAGE_DIR, 'Apple iPhone 4.jpg'
       @path_no_exif = File.join File.dirname(__FILE__), 'pix.png'
     end
+    
     def test_metadata_from_file
       ImageVoodoo.with_image @path do |img|
         assert img.metadata[:IFD0].exists?
