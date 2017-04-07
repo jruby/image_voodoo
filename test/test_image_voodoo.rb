@@ -44,7 +44,7 @@ class TestImageVoodoo < Test::Unit::TestCase
     image = image.alpha('000000')
     assert_equal(0xff, image.color_at(0, 0).alpha)
   end
-  
+
   # 04 -0-> 04 -90-> 80 -180-> 4b -270-> b8
   # 8b      8b       b4        08        40
   def test_rotate

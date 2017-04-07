@@ -1,0 +1,115 @@
+# Experiment to tweak source based on what rubocop wanted me to.  I basically
+# gave up and made the following exceptions.  Personally, I find the tool did
+# find many interesting/questionable code Qs in the project but it is soooo
+# opinionated in pretty unimportant ways (like who cares how I write my
+# comments, or why can't I use kind_of? or why give me a fail for a less
+# readable but more performant pattern).
+#
+# I can obviously tweak rules (like below) but I keep hearing of people pulling
+# their hair out over all the unimportant rules; I question why this project is
+# "all-in" on it's rules versus leaving most of the style rules as some preset
+# profiles people can opt in to.
+#
+# So I am committing this and I will try and run this every now and then to
+# see what it thinks about what I wrote but you will not see this as a
+# requirement for commits since I think by the time I configured it to my
+# liking I could have finished implementing this library.  Perhaps if I
+# continue using this here and there I will end up with a profile I find
+# acceptable?  I did find value but all the piddly shit just made me angry.
+# I will reflect on it some more...
+
+# This is a Java AWT call.  It is not what the tool thinks it is...which
+# might be an issue for users interacting with Java from JRuby.
+Lint/UselessSetterCall:
+  Exclude:
+    - 'lib/image_voodoo/awt.rb'
+
+# This is just impossible for them to call properly.  I am doing something
+# like rotate_impl and it is a bunch of reasonably simple math.  If you look
+# for this transformation in a text book it will look like this code.  Putting
+# a bunch of math within different methods would get the score down but
+# it would not help readability. (addendum: I did try and break it apart more
+# and never reached 15 but got closer.  I felt this rule is neat but the
+# score really depends on what it is.
+Metrics/AbcSize:
+  Max: 16.5
+
+# This is triggered for correct_orientation_impl.  I could put these transforms
+# in a table and then execute lambdas for each orientation but this is much
+# more clear.
+Metrics/CyclomaticComplexity:
+  Max: 9
+
+# A bunch of fields in a hash are basically generated data. Correcting them
+# for column seems much too pedantic.  I guess exclude is the right thing for
+# an unusual file?
+Metrics/LineLength:
+  Max: 132
+  Exclude:
+    - 'lib/image_voodoo/metadata.rb'
+
+# Metadata classes have data in them.  awt.rb is big and perhaps could be
+# shrunk but it is not a hard file to navigate and the cleaving points are
+# not super obvious.  These sorts of rules feel very arbitrary and if I have
+# n highly related things and they do not fit into a more restrictive
+# taxonomy why would the file being longer matter?  I do understand the
+# motivation here but as a default rule this feels wrong to me.
+Metrics/ClassLength:
+  Max: 250
+
+# I do not find this very useful.  There is no performance difference and
+# sometimes I want to highlight this string does not involve interpolation.
+# Other times it is not worth pointing out.
+Style/StringLiterals:
+  Enabled: false
+
+# require 'english' is a step too far for $! which is so baked into my
+# head I do not want to change :)
+Style/SpecialGlobalVars:
+  Enabled: false
+
+# I am grouping math and using lack of whitespace for separation.
+Style/SpaceAroundOperators:
+  Enabled: false
+
+# I prefer tight assignment for opt args.
+Style/SpaceAroundEqualsInParameterDefault:
+  Enabled: false
+
+# Java methods which override or implement Java method names cannot be switched
+# to snake case.  Do we really need this as a rule anyways?  I have never seen
+# a Rubyist do this as a preferred style?
+Style/MethodName:
+  Enabled: false
+
+# bin/image_voodoo main options block.
+Metrics/BlockLength:
+  Exclude:
+    - 'bin/image_voodoo'
+
+# casecmp for this case seems like it is much less readable in a place where
+# performance could never matter (a 3-4 char downcase before processing an
+# image :) ).  This could end up being important somewhere but as a default
+# on it feels weird since I find it less readable.
+Performance/Casecmp:
+  Exclude:
+    - 'lib/image_voodoo/awt.rb'
+
+# Hash rocket looks much more natural in a rakefile for its deps.
+Style/HashSyntax:
+  Exclude:
+    - 'Rakefile'
+
+# Forget it.  I do parallel assignment and you will have to peel it out of
+# my cold dead hands.
+Style/ParallelAssignment:
+  Enabled: false
+
+# FIXME: consider keywords for shapes.
+# I might switch these to keyword args if I ever revisit shapes support.
+# In general lots of params do suck and are hard to remember.  This library
+# still is supposed to work in 1.8 but I can probably soon major rev this
+# and switch over to keywords.
+Metrics/ParameterLists:
+  Exclude:
+    - 'lib/image_voodoo/awt/shapes.rb'
