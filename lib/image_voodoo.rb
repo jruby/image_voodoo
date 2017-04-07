@@ -53,6 +53,13 @@ class ImageVoodoo
     @quality = nil # nil means no specific quality ever specified
   end
 
+  # Gets RGB value within the source image at [x, y].  If using AWT backend
+  # then consider using color_at as this is a Java signed int value of an
+  # unsigned value.
+  def pixel(x, y)
+    @src.getRGB(x, y)
+  end
+
   # Adjusts the brightness of each pixel in image by the following formula:
   # new_pixel = pixel * scale + offset
   def adjust_brightness(scale, offset)
@@ -189,6 +196,12 @@ class ImageVoodoo
   # new image.
   def with_crop(left, top, right, bottom)
     image = guard { with_crop_impl(left, top, right, bottom) }
+    block_given? ? yield(image) : image
+  end
+
+  # Creates a new (empty) image with a file name specified.
+  def self.new_image(width, height, file_name)
+    image = guard { new_image_impl(width, height, file_name) }
     block_given? ? yield(image) : image
   end
 

@@ -66,6 +66,11 @@ class ImageVoodoo
     end
   end
 
+  # *AWT-only* Return awt Color object.
+  def color_at(x, y)
+    Color.new(pixel(x, y))
+  end
+
   # *AWT-only* Creates a viewable frame displaying current image within it.
   def preview(&block)
     frame = JFrame.new('Preview')
@@ -111,10 +116,31 @@ class ImageVoodoo
   class << self
     private
 
-    def with_image_impl(file)
-      format = detect_format_from_input(file)
-      buffered_image = read_image_from_input(file)
-      buffered_image ? ImageVoodoo.new(file, buffered_image, format) : nil
+    def detect_format_from_input(input)
+      stream = ImageIO.createImageInputStream(input)
+      readers = ImageIO.getImageReaders(stream)
+      readers.has_next ? readers.next.format_name.upcase : nil
+    end
+
+    # FIXME: use library to figure this out
+    def determine_image_type_from_ext(ext)
+      case ext
+      when 'jpg' then RGB
+      else ARGB
+      end
+    end
+
+    def determine_format_from_file_name(file_name)
+      ext = file_name.split('.')[-1]
+      raise ArgumentError, "no extension in file name #{file_name}" unless ext
+      ext
+    end
+
+    def new_image_impl(width, height, file_name)
+      format = determine_format_from_file_name file_name
+      image_type = determine_image_type_from_ext format
+      buffered_image = BufferedImage.new width, height, image_type
+      ImageVoodoo.new file_name, buffered_image, format
     end
 
     def read_image_from_input(input)
@@ -128,12 +154,6 @@ class ImageVoodoo
       cmyk_reader.read 0
     end
 
-    def detect_format_from_input(input)
-      stream = ImageIO.createImageInputStream(input)
-      readers = ImageIO.getImageReaders(stream)
-      readers.has_next ? readers.next.format_name.upcase : nil
-    end
-
     def with_bytes_impl(bytes)
       input_stream = ByteArrayInputStream.new(bytes)
       format = detect_format_from_input(input_stream)
@@ -141,6 +161,12 @@ class ImageVoodoo
       buffered_image = read_image_from_input(input_stream)
       input_stream.reset
       ImageVoodoo.new(input_stream, buffered_image, format)
+    end
+
+    def with_image_impl(file)
+      format = detect_format_from_input(file)
+      buffered_image = read_image_from_input(file)
+      buffered_image ? ImageVoodoo.new(file, buffered_image, format) : nil
     end
   end
 
@@ -265,11 +291,7 @@ class ImageVoodoo
   end
 
   def paint_new_buffered_image(width, height, color = color_type, &block)
-    paint(buffered_image(width, height, color), &block)
-  end
-
-  def buffered_image(width, height, color = color_type)
-    BufferedImage.new(width, height, color)
+    paint BufferedImage.new(width, height, color), &block
   end
 
   def rotate_new_dimensions(radians)

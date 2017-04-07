@@ -62,7 +62,7 @@ class ImageVoodoo
     # *AWT* Draw a rounded rectangle
     #
     def rect_rounded(x, y, width, height, rgb, arc_width=0, arc_height=0, fill=true)
-      as_color(ImageVoodoo.hex_to_color(rgb)) do |g|
+      as_color(hex_to_color(rgb)) do |g|
         if fill
           g.fill_round_rect x, y, width, height, arc_width, arc_height
         else
