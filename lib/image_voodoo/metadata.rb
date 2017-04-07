@@ -19,7 +19,7 @@ class ImageVoodoo
     #
     def [](dirname)
       dirclass = DIRECTORY_MAP[dirname.to_s]
-      raise ArgumentError.new "Uknown metadata group: #{dirname}" unless dirclass
+      raise ArgumentError, "Uknown metadata group: #{dirname}" unless dirclass
       dirclass.new @metadata
     end
 
@@ -60,7 +60,7 @@ class ImageVoodoo
     ##
     # Does the directory you requested exist as metadata for this image.
     def exists?
-      !!@directory
+      @directory
     end
 
     ##
@@ -69,7 +69,7 @@ class ImageVoodoo
     def [](tag_name)
       return nil unless @directory
       (tag_type, tag_method) = self.class::TAGS[tag_name.to_s]
-      raise ArgumentError.new "Unkown tag_name: #{tag_name}" unless tag_type
+      raise ArgumentError, "Unkown tag_name: #{tag_name}" unless tag_type
       java_tag_type = self.class.directory_class.const_get tag_type
       return nil unless @directory.contains_tag java_tag_type
       @directory.__send__ tag_method, java_tag_type

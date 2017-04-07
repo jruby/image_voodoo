@@ -16,28 +16,32 @@ else
       @path_no_exif = File.join File.dirname(__FILE__), 'pix.png'
     end
 
+    def assert_orientation(expected, metadata)
+      assert_equal expected, metadata[:IFD0][:Orientation]
+    end
+
     def test_metadata_from_file
       ImageVoodoo.with_image @path do |img|
-        assert img.metadata[:IFD0].exists?
-        assert_equal 6, img.metadata[:IFD0][:Orientation]
-        assert_equal 6, img.metadata.orientation
-        assert_equal 3264, img.metadata.width
-        assert_equal 2448, img.metadata.height
-        assert_equal 'Apple', img.metadata.make
-        assert_equal 'iPhone 4S', img.metadata.model
+        metadata = img.metadata
+        assert_orientation 6, metadata
+        assert_equal 6, metadata.orientation
+        assert_equal 3264, metadata.width
+        assert_equal 2448, metadata.height
+        assert_equal 'Apple', metadata.make
+        assert_equal 'iPhone 4S', metadata.model
       end
     end
 
     def test_metadata_from_inputstream
       ImageVoodoo.with_bytes File.read(@path) do |img|
-        assert_equal(6, img.metadata[:IFD0][:Orientation])
+        assert_orientation 6, img.metadata
       end
     end
 
     def test_metadata_no_ifd0
       ImageVoodoo.with_image @path_no_exif do |img|
         assert !img.metadata[:IFD0].exists?
-        assert_equal(nil, img.metadata[:IFD0][:Orientation])
+        assert_orientation nil, img.metadata
       end
     end
 

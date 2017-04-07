@@ -1,21 +1,29 @@
+require 'image_voodoo/awt/core_ext/buffered_image'
+require 'image_voodoo/awt/core_ext/graphics2d'
 require 'image_voodoo/awt/shapes'
 
 # AWT Implementation
 class ImageVoodoo
   include ImageVoodoo::Shapes
 
+  java_import java.awt.AlphaComposite
   java_import java.awt.Color
+  java_import java.awt.Label
+  java_import java.awt.MediaTracker
   java_import java.awt.RenderingHints
+  java_import java.awt.Toolkit
   java_import java.awt.color.ColorSpace
   java_import java.awt.event.WindowAdapter
   java_import java.awt.geom.AffineTransform
-  java_import java.awt.image.BufferedImage
   java_import java.awt.image.ShortLookupTable
   java_import java.awt.image.ColorConvertOp
   java_import java.awt.image.LookupOp
   java_import java.awt.image.RescaleOp
   java_import java.io.ByteArrayInputStream
   java_import java.io.ByteArrayOutputStream
+  java_import java.io.IOException
+  java_import java.net.MalformedURLException
+  java_import java.net.URL
   java_import javax.imageio.ImageIO
   java_import javax.imageio.IIOImage
   java_import javax.imageio.ImageWriteParam
@@ -69,7 +77,7 @@ class ImageVoodoo
 
   # *AWT-only* paint/render to the source
   def paint(src=dup_src)
-    yield src.graphics
+    yield src.graphics, src
     src.graphics.dispose
     ImageVoodoo.new(@io, src, @format)
   end
@@ -77,17 +85,21 @@ class ImageVoodoo
   # TODO: Figure out how to determine whether source has alpha or not
   # Experimental: Read an image from the url source and yield/return that image.
   def self.from_url(source)
-    url = java.net.URL.new(source)
-    image = java.awt.Toolkit.default_toolkit.create_image(url)
-    tracker = java.awt.MediaTracker.new(java.awt.Label.new(''))
-    tracker.addImage(image, 0);
-    tracker.waitForID(0)
+    image = image_from_url source
     target = paint(BufferedImage.new(image.width, image.height, RGB)) do |g|
       g.draw_image image, 0, 0, nil
     end
     block_given? ? yield(target) : target
-  rescue java.io.IOException, java.net.MalformedURLException
-    raise ArgumentError.new "Trouble retrieving image: #{$!.message}"
+  end
+
+  def self.image_from_url(source)
+    image = Toolkit.default_toolkit.create_image(URL.new(source))
+    tracker = MediaTracker.new(Label.new(''))
+    tracker.addImage(image, 0)
+    tracker.waitForID(0)
+    image
+  rescue IOException, MalformedURLException
+    raise ArgumentError, "Trouble retrieving image: #{$!.message}"
   end
 
   # *AWT-only* Create an image of width x height filled with a single color.
@@ -109,9 +121,9 @@ class ImageVoodoo
       ImageIO.read(input)
     rescue IIOException
       require 'CMYKDemo.jar'
+      jpeg = org.monte.media.jpeg
 
-      cmyk_spi = org.monte.media.jpeg.CMYKJPEGImageReaderSpi.new
-      cmyk_reader = org.monte.media.jpeg.CMYKJPEGImageReader.new cmyk_spi
+      cmyk_reader = jpeg.CMYKJPEGImageReader.new jpeg.CMYKJPEGImageReaderSpi.new
       cmyk_reader.input = ImageIO.createImageInputStream(input)
       cmyk_reader.read 0
     end
@@ -130,17 +142,17 @@ class ImageVoodoo
       input_stream.reset
       ImageVoodoo.new(input_stream, buffered_image, format)
     end
-
-    # Converts a RGB hex value into a java.awt.Color object or dies trying
-    # with an ArgumentError.
-    def hex_to_color(rgb)
-      raise ArgumentError.new 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
-
-      Color.new(rgb[0, 2].to_i(16), rgb[2, 2].to_i(16), rgb[4, 2].to_i(16))
-    end
   end
 
   private
+
+  # Converts a RGB hex value into a java.awt.Color object or dies trying
+  # with an ArgumentError.
+  def hex_to_color(rgb='00000')
+    rgb = '000000' unless rgb
+    raise ArgumentError, 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
+    Color.new(rgb[0, 2].to_i(16), rgb[2, 2].to_i(16), rgb[4, 2].to_i(16))
+  end
 
   NEGATIVE_OP = LookupOp.new(ShortLookupTable.new(0, (0...256).to_a.reverse.to_java(:short)), nil)
   GREY_OP = ColorConvertOp.new(ColorSpace.getInstance(ColorSpace::CS_GRAY), nil)
@@ -183,22 +195,20 @@ class ImageVoodoo
   end
 
   def alpha_impl(rgb)
-    color = hex_to_color(rgb)
-    target = paint(BufferedImage.new(width, height, ARGB)) do |g|
-      g.set_composite(java.awt.AlphaComposite::Src)
+    color = hex_to_color(rgb).getRGB
+    paint(BufferedImage.new(width, height, ARGB)) do |g, target|
+      g.set_composite AlphaComposite::Src
       g.draw_image(@src, nil, 0, 0)
-      0.upto(height-1) do |i|
-        0.upto(width-1) do |j|
-          target.setRGB(j, i, 0x8F1C1C) if target.getRGB(j, i) == color.getRGB
-        end
+      target.each do |i, j|
+        target.setRGB(i, j, 0x8F1C1C) if target.getRGB(i, j) == color
       end
     end
   end
 
   def bytes_impl(format)
-    out = ByteArrayOutputStream.new
-    write_new_image format, ImageIO.create_image_output_stream(out)
-    out.to_byte_array
+    ByteArrayOutputStream.new.tap do |out|
+      write_new_image format, ImageIO.create_image_output_stream(out)
+    end.to_byte_array
   end
 
   def correct_orientation_impl
@@ -240,24 +250,31 @@ class ImageVoodoo
   end
 
   def resize_impl(width, height)
-    paint(BufferedImage.new(width, height, color_type)) do |g|
-      scaled_image = @src.get_scaled_instance width, height, SCALE_SMOOTH
-      g.draw_image scaled_image, 0, 0, nil
+    paint_new_buffered_image(width, height) do |g|
+      g.draw_this_image(@src.get_scaled_instance(width, height, SCALE_SMOOTH))
     end
   end
 
-  def rotate_impl(degrees)
-    radians = degrees * Math::PI / 180
-    sin, cos = Math.sin(radians).abs, Math.cos(radians).abs
-    new_width = (width * cos + height * sin).floor
-    new_height = (width * sin + height * cos).floor
-
-    paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-      g.java_send :translate, [::Java.int, ::Java.int],
-                  (new_width - width) / 2, (new_height - height) / 2
+  def rotate_impl(radians)
+    new_width, new_height = rotate_new_dimensions(radians)
+    paint_new_buffered_image(new_width, new_height) do |g|
+      g.jtranslate (new_width - width) / 2, (new_height - height) / 2
       g.rotate radians, width / 2, height / 2
-      g.draw_image @src, 0, 0, nil
+      g.draw_this_image @src
     end
+  end
+
+  def paint_new_buffered_image(width, height, color = color_type, &block)
+    paint(buffered_image(width, height, color), &block)
+  end
+
+  def buffered_image(width, height, color = color_type)
+    BufferedImage.new(width, height, color)
+  end
+
+  def rotate_new_dimensions(radians)
+    sin, cos = Math.sin(radians).abs, Math.cos(radians).abs
+    [(width * cos + height * sin).floor, (width * sin + height * cos).floor]
   end
 
   # Save using the format string (jpg, gif, etc..) to the open Java File
@@ -281,12 +298,7 @@ class ImageVoodoo
       param.compression_quality = @quality
     end
 
-    src = if format.downcase == 'jpg'
-            src_without_alpha
-          else
-            @src
-          end
-
+    src = format.downcase == 'jpg' ? src_without_alpha : @src
     writer.write nil, IIOImage.new(src, nil, nil), param
   end
 end

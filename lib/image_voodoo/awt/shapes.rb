@@ -1,7 +1,8 @@
 class ImageVoodoo
   # (Experimental) An attempt at some primitive drawing in images.
   module Shapes
-    # FIXME: Move and rewrite in terms of new shape
+    # FIXME: if image has alpha values the border shows through since it is
+    #   a solid fill.
     ##
     # *AWT* (experimental) Add a border to the image and yield/return a new
     # image.  The following options are supported:
@@ -11,21 +12,29 @@ class ImageVoodoo
     #
     def add_border(options = {})
       border_width = options[:width].to_i || 2
-      color = hex_to_color(options[:color]) || hex_to_color('000000')
-      style = options[:style]
-      style = nil if style.to_sym == :plain
       new_width, new_height = width + 2*border_width, height + 2*border_width
       target = paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-        g.color = color
-        if style
-          raised = style.to_sym == :raised ? true : false
-          g.fill3DRect(0, 0, new_width, new_height, raised)
-        else
-          g.fill_rect(0, 0, new_width, new_height)
-        end
+        paint_border(g, new_width, new_height, options[:color])
         g.draw_image(@src, nil, border_width, border_width)
       end
       block_given? ? yield(target) : target
+    end
+
+    def paint_border(g, new_width, new_height, options)
+      g.color = hex_to_color(options[:color])
+      fill_method, *args = border_style(options)
+      g.send fill_method, 0, 0, new_width, new_height, *args
+    end
+
+    def border_style(options)
+      case (options[:style] || "").to_s
+      when "raised" then
+        [:fill3DRect, true]
+      when "etched" then
+        [:fill3DRect, false]
+      else
+        [:fill_rect]
+      end
     end
 
     ##

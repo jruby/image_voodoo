@@ -88,13 +88,20 @@ class ImageVoodoo
   # Creates a square thumbnail of the image cropping the longest edge to
   # match the shortest edge, resizes to size, and yields/returns the new image.
   def cropped_thumbnail(size)
-    l, t, r, b, half = 0, 0, width, height, (width - height).abs / 2
-    l, r = half, half + height if width > height
-    t, b = half, half + width if height > width
-
+    l, t, r, b = calculate_thumbnail_dimentions
     target = with_crop(l, t, r, b).thumbnail(size)
     block_given? ? yield(target) : target
   end
+
+  def calculate_thumbnail_dimensions
+    half = (width - height).abs / 2
+    if width > height
+      [half, 0, half + height, height]
+    else
+      [0, half, width, half + width]
+    end
+  end
+  private :calculate_thumbnail_dimensions
 
   # Flips the image horizontally and yields/returns the new image.
   def flip_horizontally
@@ -131,10 +138,10 @@ class ImageVoodoo
   # formats like PNG of JPEG.  For others it will be ignored.
   def quality(amount)
     if amount < 0.0 || amount > 1.0
-      raise ArgumentError.new 'Quality must be between 0.0 and 1.0'
+      raise ArgumentError, 'Quality must be between 0.0 and 1.0'
     end
 
-    target = self.dup
+    target = dup
     target.quality = amount
     block_given? ? yield(target) : target
   end
@@ -149,7 +156,7 @@ class ImageVoodoo
 
   # Rotates the image by angle (specified in degrees).
   def rotate(angle)
-    target = guard { rotate_impl(angle) }
+    target = guard { rotate_impl(to_radians(angle)) }
     block_given? ? yield(target) : target
   end
 
@@ -209,9 +216,9 @@ class ImageVoodoo
   def self.guard(&block)
     return block.call
   rescue NoMethodError => e
-      "Unimplemented Feature: #{e}"
+    "Unimplemented Feature: #{e}"
   end
-  
+
   def guard(&block)
     ImageVoodoo.guard(&block)
   end
@@ -240,5 +247,9 @@ class ImageVoodoo
   # returns nil
   def format
     @format && block_given? ? yield(@format) : @format
+  end
+
+  def to_radians(degrees)
+    degrees * Math::PI / 180
   end
 end
