@@ -127,7 +127,7 @@ opts.usage('You need to supply one or more actions.') if actions.empty?
 
 # For this binstub we only want to load non-headless if we are using
 # the preview feature. top of See lib/image_voodoo.rb for more info...
-class ImageVoodoo; NEEDS_HEAD = true; end unless headless
+require 'image_voodoo/needs_head' unless headless
 
 require 'image_voodoo'
 file_name = ARGV.first
