@@ -11,7 +11,7 @@ class TestImageVoodoo < Test::Unit::TestCase
     image.square(*upper_left, 10, '000000')
     image.square(10, 0, 10, '444444')
     image.square(0, 10, 10, '888888')
-    image.square(10, 10, 10, 'bbbbbb')
+    image.square(*lower_right, 10, 'bb0000')
   end
 
   def assert_color(color, red, green, blue, alpha=nil)
@@ -21,6 +21,10 @@ class TestImageVoodoo < Test::Unit::TestCase
     assert_equal(alpha, color.alpha) if alpha
   end
 
+  def lower_right
+    [10, 10]
+  end
+  
   def upper_left
     [0, 0]
   end
@@ -46,6 +50,11 @@ class TestImageVoodoo < Test::Unit::TestCase
     assert_color(image.color_at(*upper_left), 0x88, 0x88, 0x88)
   end
 
+  def test_greyscale
+    image = make_square.greyscale
+    assert_color(image.color_at(*lower_right), 0x5d, 0x5d, 0x5d)
+  end
+
   # 04 -0-> 04 -90-> 80 -180-> 4b -270-> b8
   # 8b      8b       b4        08        40
   def test_rotate
@@ -56,7 +65,7 @@ class TestImageVoodoo < Test::Unit::TestCase
     image = image.rotate(180)
     assert_color(image.color_at(*upper_left), 0x44, 0x44, 0x44)
     image = image.rotate(270)
-    assert_color(image.color_at(*upper_left), 0xbb, 0xbb, 0xbb)
+    assert_color(image.color_at(*upper_left), 0xbb, 0x00, 0x00)
   end
 
   # 04  -(-90)-> 4b -(-180)-> 80 -(-270)-> b8
@@ -68,6 +77,6 @@ class TestImageVoodoo < Test::Unit::TestCase
     image = image.rotate(-180)
     assert_color(image.color_at(*upper_left), 0x88, 0x88, 0x88)
     image = image.rotate(-270)
-    assert_color(image.color_at(*upper_left), 0xbb, 0xbb, 0xbb)
+    assert_color(image.color_at(*upper_left), 0xbb, 0x00, 0x00)
   end
 end
