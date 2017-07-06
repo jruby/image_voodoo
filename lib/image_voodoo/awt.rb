@@ -170,6 +170,12 @@ class ImageVoodoo
     end
   end
 
+  # Save using the format string (jpg, gif, etc..) to the open Java File
+  # instance passed in.
+  def save_impl(format, file)
+    write_new_image format, FileImageOutputStream.new(file)
+  end
+
   private
 
   # Converts a RGB hex value into a java.awt.Color object or dies trying
@@ -297,12 +303,6 @@ class ImageVoodoo
   def rotate_new_dimensions(radians)
     sin, cos = Math.sin(radians).abs, Math.cos(radians).abs
     [(width * cos + height * sin).floor, (width * sin + height * cos).floor]
-  end
-
-  # Save using the format string (jpg, gif, etc..) to the open Java File
-  # instance passed in.
-  def save_impl(format, file)
-    write_new_image format, FileImageOutputStream.new(file)
   end
 
   def with_crop_impl(left, top, right, bottom)
