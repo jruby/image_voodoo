@@ -3,7 +3,7 @@ language: ruby
 sudo: false
 
 rvm:
-  - jruby-19mode
+  - jruby
 
 before_script:
   - git clone https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
