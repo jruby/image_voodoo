@@ -13,8 +13,8 @@ if !File.exist? IMAGE_DIR
 else
   class TestImageVoodooMetadata < Test::Unit::TestCase
     def setup
-      @path = File.join IMAGE_DIR, 'Apple iPhone 4S.jpg'
-      @path_gps = File.join IMAGE_DIR, 'Apple iPhone 4.jpg'
+      @path = File.join IMAGE_DIR, 'jpg', 'Apple iPhone 4S.jpg'
+      @path_gps = File.join IMAGE_DIR, 'jpg', 'Apple iPhone 4.jpg'
       @path_no_exif = File.join File.dirname(__FILE__), 'pix.png'
     end
 
@@ -51,6 +51,12 @@ else
       ImageVoodoo.with_image @path_gps do |img|
         assert img.metadata[:Gps].exists?
         assert_equal('N', img.metadata[:Gps]['Latitude Ref'])
+      end
+    end
+
+    def test_metadata_to_s
+      ImageVoodoo.with_image @path do |img|
+        assert img.metadata.to_s =~ /Make = Apple/
       end
     end
   end

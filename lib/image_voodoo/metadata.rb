@@ -1,5 +1,6 @@
 require_relative '../../vendor/xmpcore-5.1.2.jar'
 require_relative '../../vendor/metadata-extractor-2.7.0.jar'
+require 'stringio'
 
 class ImageVoodoo
   # Metadata contained within the image.
@@ -45,6 +46,18 @@ class ImageVoodoo
 
     def width
       self['Exif Sub IFD']['Exif Image Width']
+    end
+
+    def to_s
+      out = StringIO.new
+      out.puts "[{dir name}] - {tag name} = {tag descr}"
+      out.puts "---------------------------------------"
+      @metadata.directories.each do |directory|
+        directory.tags.each do |tag|
+          out.puts "[#{directory.name}] - #{tag.tag_name} = #{tag.description}"
+        end
+      end
+      out.string
     end
   end
 
