@@ -156,7 +156,7 @@ class ImageVoodoo
   def resize(width, height)
     target = guard { resize_impl(width, height) }
     block_given? ? yield(target) : target
-  rescue java.lang.Exception => ne # figure out why this is here at all?
+  rescue NativeException => ne
     raise ArgumentError, ne.message
   end
 

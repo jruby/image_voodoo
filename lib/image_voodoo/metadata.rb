@@ -1,4 +1,5 @@
-require 'image_voodoo_jars'
+require_relative '../../vendor/xmpcore-5.1.2.jar'
+require_relative '../../vendor/metadata-extractor-2.7.0.jar'
 require 'stringio'
 
 class ImageVoodoo
@@ -66,8 +67,7 @@ class ImageVoodoo
   # directory.
   class Directory
     def initialize(metadata)
-      jclass = self.class.directory_class.java_class
-      @directory = metadata.get_first_directory_of_type jclass
+      @directory = metadata.get_directory self.class.directory_class.java_class
     end
 
     ##
