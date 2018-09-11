@@ -31,7 +31,7 @@ end
 # img = ImageVoodoo.with_image(ARGV[0])
 # negative_img = img.negative
 class ImageVoodoo
-  attr_accessor :quality
+  attr_writer :quality # used by quality(value)
 
   include Java
 
@@ -100,7 +100,7 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
-  def calculate_thumbnail_dimensions
+  private def calculate_thumbnail_dimensions
     half = (width - height).abs / 2
     if width > height
       [half, 0, half + height, height]
@@ -108,7 +108,6 @@ class ImageVoodoo
       [0, half, width, half + width]
     end
   end
-  private :calculate_thumbnail_dimensions
 
   # Flips the image horizontally and yields/returns the new image.
   def flip_horizontally
@@ -227,7 +226,7 @@ class ImageVoodoo
   # support it.  Otherwise, this method will detect that the method is
   # missing.
   def self.guard(&block)
-    return block.call
+    block.call
   rescue NoMethodError => e
     "Unimplemented Feature: #{e}"
   end

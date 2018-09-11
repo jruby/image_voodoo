@@ -180,8 +180,8 @@ class ImageVoodoo
 
   # Converts a RGB hex value into a java.awt.Color object or dies trying
   # with an ArgumentError.
-  def hex_to_color(rgb='00000')
-    rgb = '000000' unless rgb
+  def hex_to_color(rgb='000000')
+    rgb ||= '000000'
     raise ArgumentError, 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
     Color.new(rgb[0, 2].to_i(16), rgb[2, 2].to_i(16), rgb[4, 2].to_i(16))
   end

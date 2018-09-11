@@ -24,7 +24,7 @@ class TestImageVoodoo < Test::Unit::TestCase
   def lower_right
     [10, 10]
   end
-  
+
   def upper_left
     [0, 0]
   end

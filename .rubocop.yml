@@ -69,17 +69,17 @@ Style/SpecialGlobalVars:
   Enabled: false
 
 # I am grouping math and using lack of whitespace for separation.
-Style/SpaceAroundOperators:
+Layout/SpaceAroundOperators:
   Enabled: false
 
 # I prefer tight assignment for opt args.
-Style/SpaceAroundEqualsInParameterDefault:
+Layout/SpaceAroundEqualsInParameterDefault:
   Enabled: false
 
 # Java methods which override or implement Java method names cannot be switched
 # to snake case.  Do we really need this as a rule anyways?  I have never seen
 # a Rubyist do this as a preferred style?
-Style/MethodName:
+Naming/MethodName:
   Enabled: false
 
 # bin/image_voodoo main options block.
@@ -113,3 +113,61 @@ Style/ParallelAssignment:
 Metrics/ParameterLists:
   Exclude:
     - 'lib/image_voodoo/awt/shapes.rb'
+
+# This is complaining that 'x' and 'y' are bad names because they are less
+# than 3 chars.  Silly rule even if I appreciate what it is trying to
+# accomplish. Interestingly, in image_voodoo I do use h for height and
+# w for width.  Those probably could be written out but they are so common
+# I am basically opting for short-hand.  This is something I rarely do except
+# domain-driven code like this (x,y,h,w).
+Naming/UncommunicativeMethodParamName:
+  Enabled: false
+
+# This represents one of those frustrating dogmatic rules where if I followed
+# this advice I would then violate the column length rule.  I specifically
+# use traditional if indented block in cases where if_mod doesn't fit.
+# Gramatically, if_mod can be across two lines but I hate how that looks. The
+# second solution of logical &&/|| change for a raise is alien to for all but
+# assignment.
+Style/IfUnlessModifier:
+  Enabled: false
+
+# What the hell.  Really telling people that encoding: utf-8 should not happen
+# because there are no multi-byte utf-8 characters in it?  Why add this noise?
+Style/Encoding:
+  Enabled: false
+
+# FIXME:
+# This is an unknown error which I should figure out.  It must be some
+# StandardError (which is what nothing explicit means) but I should actually
+# be more explicit here.
+Style/RescueStandardError:
+  Exclude:
+    - 'lib/image_voodoo.rb'
+
+
+# This was complaining metadata_impl should use @metadata_impl instead of
+# @metadata.  I disagree and am unsure why I need to follow this programs
+# opinion on what a good name is?  What is commentable is if I change the
+# variable name to @gorgon it still tells me I need to use @metadata_impl.
+# So if I conditionally add any state in any method it will tell me I am
+# memoizing and have to use same ivar as the name of the method?  Is it more
+# sophisticated than that?  Should I have spent 2-3 minutes trying to figure
+# out how this rule was implemented? :)
+Naming/MemoizedInstanceVariableName:
+  Enabled: false
+
+# I have two modes of use for private.  If it is a small number of individual
+# methods I am explicit and inline the private.  If it is a large number of
+# methods especially when the name is fairly obvious that those will be private
+# (like render_impl) then I use block private.  Not sure telling me I can only
+# use a single style is very useful.
+Style/AccessModifierDeclarations:
+  Enabled: false
+
+# I feel for the tiny amount of generation here a better name would not help
+# me understand it better.  This is one of those naming rules I feel is
+# probably helpful a minority of the time.  Also I have never been confused
+# by what a heredoc text represents because of my heredoc terminator?
+Naming/HeredocDelimiterNaming:
+  Enabled: false
