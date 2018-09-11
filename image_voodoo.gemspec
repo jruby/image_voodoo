@@ -20,5 +20,6 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = %w[lib vendor]
   s.has_rdoc      = true
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'test-unit'
 end
