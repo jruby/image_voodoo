@@ -6,4 +6,4 @@ rvm:
   - jruby
 
 before_script:
-  - git clone https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
+  - git clone --depth 1 https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
