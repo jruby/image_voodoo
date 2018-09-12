@@ -3,7 +3,7 @@ language: ruby
 sudo: false
 
 rvm:
-  - jruby
+  - jruby-head
 
 before_script:
   - git clone --depth 1 https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
