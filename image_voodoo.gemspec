@@ -20,6 +20,11 @@ Gem::Specification.new do |s|
   s.executables   = `git ls-files -- bin/*`.split("\n").map { |f| File.basename(f) }
   s.require_paths = %w[lib vendor]
   s.has_rdoc      = true
+
+  s.add_development_dependency 'jar-dependencies'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'ruby-maven'
   s.add_development_dependency 'test-unit'
+
+  s.requirements << 'jar com.drewnoakes, metadata-extractor, 2.11.0'
 end
