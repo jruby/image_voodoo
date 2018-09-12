@@ -5,5 +5,10 @@ sudo: false
 rvm:
   - jruby-head
 
+before_install:
+  - mkdir rvm_tmp
+  - cd rvm_tmp
+
 before_script:
+  - cd ..
   - git clone --depth 1 https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
