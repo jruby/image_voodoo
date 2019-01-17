@@ -13,5 +13,5 @@ before_script:
   - cd ..
   - git clone --depth 1 https://github.com/drewnoakes/metadata-extractor-images.git ../metadata-extractor-images
 
-install: JRUBY_OPTS=--dev bundle install --jobs=3 --retry=3
+install: JRUBY_OPTS=--dev jruby --dev -S bundle install --jobs=3 --retry=3
 
