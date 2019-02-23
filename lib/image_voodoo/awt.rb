@@ -251,7 +251,7 @@ class ImageVoodoo
     when 5 then flip_horizontally && rotate(90)
     when 6 then rotate(90)
     when 7 then flip_horizontally && rotate(270)
-    when 8 then rorate(270)
+    when 8 then rotate(270)
     else self
     end
   end
