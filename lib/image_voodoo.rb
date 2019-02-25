@@ -95,7 +95,7 @@ class ImageVoodoo
   # Creates a square thumbnail of the image cropping the longest edge to
   # match the shortest edge, resizes to size, and yields/returns the new image.
   def cropped_thumbnail(size)
-    l, t, r, b = calculate_thumbnail_dimentions
+    l, t, r, b = calculate_thumbnail_dimensions
     target = with_crop(l, t, r, b).thumbnail(size)
     block_given? ? yield(target) : target
   end
