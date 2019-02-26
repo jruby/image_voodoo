@@ -6,10 +6,6 @@ class ImageVoodoo
 
   # Re-open to add convenience methods.
   class Graphics2D
-    def jtranslate(x, y)
-      java_send :translate, [::Java.int, ::Java.int], x, y
-    end
-
     def draw_this_image(image)
       draw_image image, 0, 0, nil
     end

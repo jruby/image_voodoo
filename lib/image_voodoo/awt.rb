@@ -291,7 +291,7 @@ class ImageVoodoo
   def rotate_impl(radians)
     new_width, new_height = rotate_new_dimensions(radians)
     paint_new_buffered_image(new_width, new_height) do |g|
-      g.jtranslate (new_width - width) / 2, (new_height - height) / 2
+      g.translate (new_width - width) / 2, (new_height - height) / 2
       g.rotate radians, width / 2, height / 2
       g.draw_this_image @src
     end
