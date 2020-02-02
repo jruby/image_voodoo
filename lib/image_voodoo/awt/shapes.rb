@@ -14,7 +14,7 @@ class ImageVoodoo
       border_width = options[:width].to_i || 2
       new_width, new_height = width + 2*border_width, height + 2*border_width
       target = paint(BufferedImage.new(new_width, new_height, color_type)) do |g|
-        paint_border(g, new_width, new_height, options[:color])
+        paint_border(g, new_width, new_height, options)
         g.draw_image(@src, nil, border_width, border_width)
       end
       block_given? ? yield(target) : target
