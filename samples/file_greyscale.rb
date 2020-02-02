@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_voodoo'
 
 # reads in the file specified by ARGV[0], transforming to greyscale and

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_voodoo/awt/core_ext/buffered_image'
 require 'image_voodoo/awt/core_ext/graphics2d'
 require 'image_voodoo/awt/shapes'
@@ -132,7 +134,9 @@ class ImageVoodoo
 
     def determine_format_from_file_name(file_name)
       ext = file_name.split('.')[-1]
+
       raise ArgumentError, "no extension in file name #{file_name}" unless ext
+
       ext
     end
 
@@ -182,7 +186,9 @@ class ImageVoodoo
   # with an ArgumentError.
   def hex_to_color(rgb='000000')
     rgb ||= '000000'
+
     raise ArgumentError, 'hex rrggbb needed' if rgb !~ /[[:xdigit:]]{6,6}/
+
     Color.new(rgb[0, 2].to_i(16), rgb[2, 2].to_i(16), rgb[4, 2].to_i(16))
   end
 

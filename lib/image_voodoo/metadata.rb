@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_voodoo_jars'
 require 'stringio'
 
@@ -19,7 +21,9 @@ class ImageVoodoo
     #
     def [](dirname)
       dirclass = DIRECTORY_MAP[dirname.to_s]
+
       raise ArgumentError, "Uknown metadata group: #{dirname}" unless dirclass
+
       dirclass.new @metadata
     end
 
@@ -81,10 +85,15 @@ class ImageVoodoo
     # defined.
     def [](tag_name)
       return nil unless @directory
+
       (tag_type, tag_method) = self.class::TAGS[tag_name.to_s]
+
       raise ArgumentError, "Unkown tag_name: #{tag_name}" unless tag_type
+
       java_tag_type = self.class.directory_class.const_get tag_type
+
       return nil unless @directory.contains_tag java_tag_type
+
       @directory.__send__ tag_method, java_tag_type
     end
   end

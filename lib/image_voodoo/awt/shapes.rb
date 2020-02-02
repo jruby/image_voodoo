@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 class ImageVoodoo
   # (Experimental) An attempt at some primitive drawing in images.
   module Shapes

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'java'
 
 # Hide in ImageVoodoo so awt.rb can see this and we will not polute global

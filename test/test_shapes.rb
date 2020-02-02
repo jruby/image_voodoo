@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'test/unit/testcase'
 require 'test/unit' if $PROGRAM_NAME == __FILE__
 require 'image_voodoo'

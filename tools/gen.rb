@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Used to generate part of metadata.rb.  Unfortunately, I am unable to fill
 # in appropriate access methods so I generate with get_string and then manually
 # update.  In future versions I will just run this twice with old and new src
@@ -30,6 +32,7 @@ directories = {}
 io.readlines.each do |line|
   #  .../IptcDirectory.java: public static final int TAG_BY_LINE = 80;
   next if %r{Source/[/]?(?<dir_name>.*).java:.*TAG_(?<tag_name>[\S]+)} !~ line
+
   directory_name = normalize_directory_name dir_name
   directories[directory_name] ||= []
   directories[directory_name] << normalize_tag_name(tag_name)

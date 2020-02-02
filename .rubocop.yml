@@ -38,12 +38,12 @@ Metrics/AbcSize:
 # in a table and then execute lambdas for each orientation but this is much
 # more clear.
 Metrics/CyclomaticComplexity:
-  Max: 9
+  Max: 10
 
 # A bunch of fields in a hash are basically generated data. Correcting them
 # for column seems much too pedantic.  I guess exclude is the right thing for
 # an unusual file?
-Metrics/LineLength:
+Layout/LineLength:
   Max: 132
   Exclude:
     - 'lib/image_voodoo/metadata.rb'
@@ -87,14 +87,6 @@ Metrics/BlockLength:
   Exclude:
     - 'bin/image_voodoo'
 
-# casecmp for this case seems like it is much less readable in a place where
-# performance could never matter (a 3-4 char downcase before processing an
-# image :) ).  This could end up being important somewhere but as a default
-# on it feels weird since I find it less readable.
-Performance/Casecmp:
-  Exclude:
-    - 'lib/image_voodoo/awt.rb'
-
 # Hash rocket looks much more natural in a rakefile for its deps.
 Style/HashSyntax:
   Exclude:
@@ -120,7 +112,7 @@ Metrics/ParameterLists:
 # w for width.  Those probably could be written out but they are so common
 # I am basically opting for short-hand.  This is something I rarely do except
 # domain-driven code like this (x,y,h,w).
-Naming/UncommunicativeMethodParamName:
+Naming/MethodParameterName:
   Enabled: false
 
 # This represents one of those frustrating dogmatic rules where if I followed

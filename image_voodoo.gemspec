@@ -1,4 +1,5 @@
 # -*- encoding: utf-8 -*-
+# frozen_string_literal: true
 
 $LOAD_PATH.push File.expand_path('lib', __dir__)
 require 'image_voodoo/version'
@@ -20,6 +21,7 @@ Gem::Specification.new do |s|
 
   s.add_development_dependency 'jar-dependencies'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'rubocop'
   s.add_development_dependency 'ruby-maven'
   s.add_development_dependency 'test-unit'
 

@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 # Before we load image_voodoo we can specify whether we want it to load full
 # AWT ala http://www.oracle.com/technetwork/articles/javase/headless-136834.html
 # Most users are using image_voodoo as a library for manipulation and do not
@@ -156,8 +158,8 @@ class ImageVoodoo
   def resize(width, height)
     target = guard { resize_impl(width, height) }
     block_given? ? yield(target) : target
-  rescue java.lang.Exception => ne # figure out why this is here at all?
-    raise ArgumentError, ne.message
+  rescue java.lang.Exception => e # figure out why this is here at all?
+    raise ArgumentError, e.message
   end
 
   # Rotates the image by angle (specified in degrees).
@@ -171,6 +173,7 @@ class ImageVoodoo
   def save(file)
     format = File.extname(file)
     return false if format == ''
+
     format = format[1..-1].downcase
     guard { save_impl(format, JFile.new(file)) }
     true
@@ -207,6 +210,7 @@ class ImageVoodoo
   # A top-level image loader opens path and then yields/returns the image.
   def self.with_image(path)
     raise ArgumentError, "file does not exist: #{path}" unless File.file?(path)
+
     image = guard { with_image_impl(JFile.new(path)) }
     image && block_given? ? yield(image) : image
   end

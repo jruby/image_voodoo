@@ -1,10 +1,12 @@
+# frozen_string_literal: true
+
 require 'bundler'
 require 'rake/testtask'
 require 'jars/installer'
 Bundler::GemHelper.install_tasks
 Bundler.setup
 
-task :default => [:vendor_jars, :test]
+task :default => %i[vendor_jars test]
 
 desc 'Vendor Jars'
 task :vendor_jars do

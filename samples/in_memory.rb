@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_voodoo'
 
 # reads in the image at ARGV[0], transforms it into a 32-pixel thumbnail in-memory,

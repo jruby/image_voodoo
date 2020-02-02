@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_science'
 
 # reads in the file specified by ARGV[0], transforms it into a 32-pixel thumbnail,

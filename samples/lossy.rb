@@ -1,3 +1,5 @@
+# frozen_string_literal: true
+
 require 'image_voodoo'
 
 ImageVoodoo.with_image(ARGV[0]) do |img|

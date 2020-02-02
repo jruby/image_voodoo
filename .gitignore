@@ -3,3 +3,4 @@
 Gemfile.lock
 lib/image_voodoo_jars.rb
 lib/com
+.idea
