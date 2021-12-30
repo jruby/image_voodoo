@@ -94,6 +94,12 @@ class ImageVoodoo
     block_given? ? yield(target) : target
   end
 
+  # crops part of an image
+  def crop(x, y, width, height)
+    target = with_crop(x, y, x + width, y + height)
+    block_given? ? yield(target) : target
+  end
+
   # Creates a square thumbnail of the image cropping the longest edge to
   # match the shortest edge, resizes to size, and yields/returns the new image.
   def cropped_thumbnail(size)

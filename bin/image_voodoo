@@ -42,6 +42,12 @@ opts = OptionParser.new do |o|
     actions << ->(img) { img.add_border(options) }
   end
 
+  o.on('-c', '--crop X,Y,WIDTH,HEIGHT', 'Crop the image') do |args|
+    x, y, width, height = args.split(/,/).map(&:to_i)
+
+    actions << ->(img) { img.crop(x, y, width, height) }
+  end
+
   o.on('-d', '--dimensions', 'Print the image dimensions') do
     actions << ->(img) { img.tap { puts "#{img.width}x#{img.height}" } }
   end
